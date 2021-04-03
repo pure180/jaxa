@@ -1,0 +1,11 @@
+definition:
+  name: user
+  plural: users
+  type: persisted
+properties: 
+  lastName:
+    type: string
+    required: true
+  name: 
+    type: string
+    required: true
