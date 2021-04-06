@@ -4,13 +4,23 @@ import { Model, ModelCtor, BaseError } from 'sequelize';
 import { Service } from '../Service/Service';
 
 export class BaseController {
-  private service: Service;
+  private service?: Service;
 
-  constructor(model: ModelCtor<Model<any, any>>) {
-    this.service = new Service(model);
+  constructor(model?: ModelCtor<Model<any, any>>) {
+    this.service = model && new Service(model);
   }
 
+  private noServiceError = () => {
+    throw new Error(
+      `Controller can't be initialized, properly model is missing`,
+    );
+  };
+
   public count = async (req: Request, res: Response, next: NextFunction) => {
+    if (!this.service) {
+      return this.noServiceError();
+    }
+
     try {
       const { query } = req;
       const count = await this.service.count(query);
@@ -21,6 +31,10 @@ export class BaseController {
   };
 
   public create = async (req: Request, res: Response, next: NextFunction) => {
+    if (!this.service) {
+      return this.noServiceError();
+    }
+
     const { body } = req;
     try {
       const data = await this.service.create(body);
@@ -35,6 +49,10 @@ export class BaseController {
     res: Response,
     next: NextFunction,
   ) => {
+    if (!this.service) {
+      return this.noServiceError();
+    }
+
     const { id } = req.params;
     try {
       const data = await this.service.deleteById(id);
@@ -45,6 +63,10 @@ export class BaseController {
   };
 
   public findAll = async (req: Request, res: Response, next: NextFunction) => {
+    if (!this.service) {
+      return this.noServiceError();
+    }
+
     const { query } = req;
     try {
       const data = await this.service.find(query);
@@ -55,6 +77,10 @@ export class BaseController {
   };
 
   public findById = async (req: Request, res: Response, next: NextFunction) => {
+    if (!this.service) {
+      return this.noServiceError();
+    }
+
     const { id } = req.params;
     try {
       const data = await this.service.findById(id);
@@ -69,6 +95,10 @@ export class BaseController {
     res: Response,
     next: NextFunction,
   ) => {
+    if (!this.service) {
+      return this.noServiceError();
+    }
+
     const { body } = req;
     const { id } = req.params;
     try {

@@ -32,10 +32,7 @@ export class Swagger {
   }
 
   public initialize = () => {
-    const setup = this.getSetup();
-    console.log(setup);
-
-    this.app.use(this.path, swaggerUi.serve, swaggerUi.setup(setup));
+    this.app.use(this.path, swaggerUi.serve, swaggerUi.setup(this.getSetup()));
   };
 
   private getSetup = (): swaggerUi.JsonObject => {

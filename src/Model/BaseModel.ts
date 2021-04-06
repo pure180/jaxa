@@ -1,8 +1,9 @@
-import { Router } from 'express';
+import { IRoute, Router } from 'express';
 import { Model, ModelCtor } from 'sequelize';
 
 import { ModelSettings } from './Definition';
-import { BaseController } from '../Controller/BaseController';
+import {} from '../Controller/BaseController';
+import { KeysOfBaseController, BaseController } from '../Controller';
 
 export interface BaseModelProps {
   name: string;
@@ -35,15 +36,11 @@ export class BaseModel {
 
   private initializeRoutes = () => {
     const controller = this.getController();
-
-    this.router.route('/count').get(controller.count);
-    this.router
-      .route('/:id')
-      .get(controller.findById)
-      .put(controller.updateById)
-      .delete(controller.deleteById);
-
-    this.router.route('/').get(controller.findAll).post(controller.create);
+    this.baseRoutes().forEach((baseRoute) => {
+      this.router
+        .route(baseRoute.route)
+        [baseRoute.handler](controller[baseRoute.method]);
+    });
   };
 
   public initialize = async () => {
@@ -53,5 +50,44 @@ export class BaseModel {
     } catch (error) {
       throw error;
     }
+  };
+
+  public baseRoutes = (): {
+    route: string;
+    method: KeysOfBaseController;
+    handler: keyof IRoute;
+  }[] => {
+    return [
+      {
+        route: '/count',
+        method: 'count',
+        handler: 'get',
+      },
+      {
+        route: '/:id',
+        method: 'findById',
+        handler: 'get',
+      },
+      {
+        route: '/:id',
+        method: 'updateById',
+        handler: 'put',
+      },
+      {
+        route: '/:id',
+        method: 'deleteById',
+        handler: 'delete',
+      },
+      {
+        route: '/',
+        method: 'findAll',
+        handler: 'get',
+      },
+      {
+        route: '/',
+        method: 'create',
+        handler: 'post',
+      },
+    ];
   };
 }
