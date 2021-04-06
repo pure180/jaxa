@@ -10,12 +10,10 @@ export interface BaseRouteProps {
 }
 
 export class BaseRoute {
-  private app: express.Application;
   public basePath: string;
   public router: Router;
 
   constructor({ path, app, forModel, name, routerOptions }: BaseRouteProps) {
-    this.app = app;
     this.basePath = `${app.mountpath}${path || ''}${(forModel && name) || ''}`;
     this.router = Router(routerOptions);
 
@@ -25,13 +23,16 @@ export class BaseRoute {
   }
 
   private createRoutes = () => {
-    this.router.get(this.basePath, (req: Request, res: Response, next: NextFunction): void => {
-      try {
-        res.sendStatus(200);
-      } catch (error) {
-        next(error);
-      }
-    });
+    this.router.get(
+      this.basePath,
+      (req: Request, res: Response, next: NextFunction): void => {
+        try {
+          res.sendStatus(200);
+        } catch (error) {
+          next(error);
+        }
+      },
+    );
   };
 }
 

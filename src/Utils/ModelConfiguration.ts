@@ -3,19 +3,21 @@ import { readdirSync, existsSync, readFileSync } from 'fs';
 import { join, extname, basename } from 'path';
 import { ModelSettings } from '../Model/Definition';
 
-export interface ModelConfigProps {
+export interface ModelConfigurationProps {
   pathToConfig?: string;
 }
+
+export type ModelAttributes = { [key: string]: ModelSettings };
 
 export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-export class ModelConfig {
+export class ModelConfiguration {
   protected baseDir: string = process.cwd();
   protected pathToConfig: string;
 
-  constructor(props?: ModelConfigProps) {
+  constructor(props?: ModelConfigurationProps) {
     this.pathToConfig = join(this.baseDir, props?.pathToConfig || 'config');
   }
 
@@ -53,7 +55,7 @@ export class ModelConfig {
     return config;
   }
 
-  private validateConfig(): { [key: string]: ModelSettings } {
+  private validateConfig(): ModelAttributes {
     const parsedConfig = this.parseConfig();
 
     if (!parsedConfig) {
@@ -65,9 +67,9 @@ export class ModelConfig {
     return parsedConfig;
   }
 
-  public getModelConfigurations() {
+  public getAttributes(): ModelAttributes {
     return this.validateConfig();
   }
 }
 
-export default ModelConfig;
+export default ModelConfiguration;

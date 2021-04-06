@@ -1,12 +1,12 @@
 import Server from './App';
 
-const pkg = require('../package.json');
+import pkg from './Utils/PackageDefinition';
 
 const server = new Server();
 
 server
   .start()
   .then(() => {
-    console.log(`Starting ${pkg.name} is starting.`);
+    console.log(`All set up, starting "${pkg.name}" API.`);
   })
   .catch((err) => console.error(err));

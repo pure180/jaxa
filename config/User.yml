@@ -1,4 +1,5 @@
 definition:
+  description: User Table
   name: user
   plural: users
   type: persisted
@@ -8,4 +9,11 @@ properties:
     required: true
   name: 
     type: string
+    length: 11
     required: true
+relations: 
+  restaurants:
+    model: Restaurant
+    type: hasOne
+    options: 
+      as: restaurant

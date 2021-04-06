@@ -14,7 +14,7 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "prettier": {
-    "printWidth": 150,
+    "printWidth": 80,
     "tabWidth": 2,
     "singleQuote": true,
     "trailingComma": "all",
@@ -33,6 +33,7 @@
     "morgan": "^1.10.0",
     "sequelize": "^6.6.2",
     "sqlite3": "^5.0.2",
+    "swagger-ui-express": "^4.1.6",
     "ts-node": "^9.1.1",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.1",
@@ -46,6 +47,7 @@
     "@types/hpp": "^0.2.1",
     "@types/morgan": "^1.9.2",
     "@types/sequelize": "^4.28.9",
+    "@types/swagger-ui-express": "^4.1.2",
     "@types/yaml": "^1.9.7",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",

@@ -5,14 +5,12 @@ import hpp from 'hpp';
 import morgan from 'morgan';
 import cors, { CorsOptions } from 'cors';
 import express, { NextFunction, Request, Response, Router } from 'express';
-import { Sequelize } from 'sequelize';
 import { HttpError } from 'http-errors';
 
 import { logger, stream } from './Utils/Logger';
-import { capitalizeFirstLetter, ModelConfig } from './Utils/ModelConfig';
-import { BaseModel } from './Model/BaseModel';
-
-const killPort = require('kill-port');
+import Sequelizer from './Sequelizer/Sequelizer';
+import { PackageDefinition } from './Utils/PackageDefinition';
+import { Swagger } from './Swagger/Swagger';
 
 enum EnvKeys {
   Development = 'development',
@@ -20,35 +18,58 @@ enum EnvKeys {
   Staging = 'staging',
 }
 
+/**
+ *
+ */
 export interface AppSettings {
   cors?: CorsOptions;
   domain?: string;
   middleWares?: express.RequestHandler[];
+  packageJson?: PackageDefinition;
 }
 
+/**
+ * Base express application
+ */
 export class App {
   private app: express.Application;
   private env: EnvKeys;
   private listening: boolean = false;
   private port: number;
   private router: Router;
-  private sequelize: Sequelize;
+
+  /**
+   * @var settings {AppSettings | undefined} -
+   */
   private settings?: AppSettings;
 
+  /**
+   *
+   * @param settings {AppSettings} -
+   * @param settings.cors {CorsOptions} -
+   * @param settings.domain {String} -
+   * @param settings.middleWares {RequestHandler} -
+   * @returns App -
+   */
   constructor(settings?: AppSettings) {
     this.app = express();
-    this.env = (process.env.NODE_ENV as EnvKeys | undefined) || EnvKeys.Development;
+    this.app.mountpath = '/api/v1';
+    this.env =
+      (process.env.NODE_ENV as EnvKeys | undefined) || EnvKeys.Development;
     this.port = Number(process.env.PORT) || 1337;
     this.settings = settings;
-    this.sequelize = new Sequelize('sqlite::memory:');
     this.router = Router({ mergeParams: true });
   }
 
+  /**
+   *
+   * @returns {express.Application} -
+   */
   public listen() {
     if (!this.listening) {
       this.app
         .listen(this.port, () => {
-          logger.info(`🚀 App listening on the port ${this.port}`);
+          logger.info(`App listening on the port ${this.port}`);
           this.listening = true;
         })
         .once('error', (error: HttpError) => {
@@ -61,6 +82,9 @@ export class App {
     return this.app.listen;
   }
 
+  /**
+   * @returns void -
+   */
   public async start() {
     this.initializeMiddleware();
     await this.initializeRoutes();
@@ -68,6 +92,9 @@ export class App {
     this.listen();
   }
 
+  /**
+   * @returns void -
+   */
   private initializeMiddleware() {
     if (this.env === EnvKeys.Development) {
       this.app.use(morgan('dev', { stream }));
@@ -103,43 +130,40 @@ export class App {
     }
   }
 
+  /**
+   * @returns void -
+   */
   private async initializeRoutes() {
-    this.router.get(this.app.mountpath, (req: Request, res: Response, next: NextFunction) => {
-      try {
-        res.sendStatus(200);
-      } catch (error) {
-        next(error);
-      }
-    });
+    this.router.get(
+      this.app.mountpath,
+      (req: Request, res: Response, next: NextFunction) => {
+        try {
+          res.sendStatus(200);
+        } catch (error) {
+          next(error);
+        }
+      },
+    );
 
     this.app.use(this.app.mountpath, this.router);
-    const models = await this.sequelizeModels();
+
+    const sequelizer = new Sequelizer();
+    const models = await sequelizer.sequelizeModels();
+    sequelizer.defineModelRelations();
 
     for (const model of models) {
       await model.initialize();
-      this.router.use(`/:${model.path}`, model.router);
-    }
-  }
-
-  private async sequelizeModels() {
-    try {
-      await this.sequelize.authenticate();
-    } catch (error) {
-      throw error;
+      this.router.use(`/${model.path}`, model.router);
     }
 
-    const modelConfigurations = new ModelConfig().getModelConfigurations();
-
-    return Object.keys(modelConfigurations).map((key) => {
-      const conf = modelConfigurations[key];
-      const model = new BaseModel({
-        name: capitalizeFirstLetter(conf.definition.name),
-        sequelize: this.sequelize,
-        settings: modelConfigurations[key],
-      });
-
-      return model;
+    const swagger = new Swagger({
+      app: this.app,
+      models,
+      router: this.router,
+      sequelizer: sequelizer,
     });
+
+    swagger.initialize();
   }
 }
 
