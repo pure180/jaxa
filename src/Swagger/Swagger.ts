@@ -6,6 +6,8 @@ import { Sequelize } from 'sequelize';
 import Sequelizer from '../Sequelizer/Sequelizer';
 import { capitalizeFirstLetter } from '../Utils/ModelConfiguration';
 import { BaseModel } from '../Model/BaseModel';
+import { stringify } from 'yaml';
+import { BaseController } from '../Controller';
 
 export interface SwaggerProps {
   app: express.Application;
@@ -37,8 +39,8 @@ export class Swagger {
 
   private getSetup = (): swaggerUi.JsonObject => {
     return {
-      // openapi: '3.0.0',
-      swagger: '2.0',
+      openapi: '3.0.0',
+      // swagger: '2.0',
       info: {
         description: this.packageInfo.description,
         version: this.packageInfo.version,
@@ -51,12 +53,13 @@ export class Swagger {
           url: '',
         },
       },
-      host: 'localhost',
+      host: 'localhost:1337',
       basePath: this.app.mountpath,
       tags: this.getTags(),
       schemes: ['https', 'http'],
       paths: this.getPaths(),
       definitions: this.getDefinitions(),
+      components: this.getComponents(),
     };
   };
 
@@ -72,81 +75,139 @@ export class Swagger {
   };
 
   private getPaths = () => {
-    const path: { [key: string]: unknown } = {};
+    const paths: { [key: string]: any } = {};
     this.models.forEach((model) => {
-      const key = `${this.app.mountpath}/${model.path}`;
-      const defaultDefinition: { [key: string]: unknown } = {
-        post: {
+      const routes = model.baseRoutes();
+      routes.forEach((baseRoute) => {
+        const route =
+          baseRoute.route.length > 0 && /\/\:/.test(baseRoute.route)
+            ? `/{${baseRoute.route.replace('/:', '')}}`
+            : (baseRoute.route.length > 1 && baseRoute.route) || '';
+
+        const key = `/${model.path}${route}`;
+        const handler = baseRoute.handler;
+
+        if (!(key in paths)) {
+          paths[key] = {};
+        }
+
+        paths[key][handler] = {
           tags: [model.name],
-          summary: `Add a new ${model.name} to the store`,
-          description: '',
-          operationId: 'create',
+          summary: '', // TODO - Add Summary
+          operationId: baseRoute.method,
           consumes: ['application/json', 'application/xml'],
           produces: ['application/json'],
-          parameters: [
-            {
-              in: 'body',
-              name: 'body',
-              description: `${model.name} object that needs to be added to the store`,
-              required: true,
-              schema: {
-                $ref: `#/definitions/${model.name.toLowerCase()}`,
+          parameters: this.getParameters(baseRoute.method, model.name), // TODO - Add parameters
+          responses: this.getResponses(baseRoute.method, model.name),
+        };
+      });
+    });
+
+    return paths;
+  };
+
+  private getParameters = (method: keyof BaseController, modelName: string) => {
+    const parameters: { [key: string]: any }[] = [];
+    switch (method) {
+      case 'findById':
+      case 'deleteById':
+      case 'updateById':
+        parameters.push({
+          in: 'path',
+          name: 'id',
+          required: true,
+          type: 'string',
+        });
+
+      case 'create':
+        if (method !== 'deleteById' && method !== 'findById') {
+          parameters.push({
+            in: 'body',
+            name: 'body',
+            description: `${modelName} object that needs to be added to the store`,
+            required: true,
+            schema: {
+              $ref: `#/components/schemas/${modelName}`,
+            },
+          });
+        }
+        break;
+      case 'count':
+      case 'findAll':
+        parameters.push(...this.getQueries());
+        break;
+    }
+
+    return parameters;
+  };
+
+  private getResponses = (method: keyof BaseController, modelName: string) => {
+    const responses: { [key: number]: any } = {};
+    switch (method) {
+      case 'create':
+      case 'updateById':
+      case 'findById':
+      case 'findAll':
+        Object.assign(responses, {
+          200: {
+            description: 'Successful',
+            content: {
+              'application/json': {
+                schema:
+                  method === 'findAll'
+                    ? {
+                        type: 'array',
+                        items: {
+                          $ref: `#/components/schemas/${modelName}`,
+                        },
+                      }
+                    : {
+                        $ref: `#/components/schemas/${modelName}`,
+                      },
               },
-            },
-          ],
-          responses: {
-            '200': {
-              description: 'Successful',
-              schema: {
-                $ref: `#/definitions/${model.name.toLowerCase()}`,
-              },
-            },
-            '400': {
-              description: 'Bad request',
-            },
-            '404': {
-              description: 'Not found',
-            },
-            '405': {
-              description: 'Invalid input',
             },
           },
-        },
-        get: {
-          tags: [model.name],
-          summary: `Find ${model.path}`,
-          description: '',
-          operationId: 'find',
-          consumes: ['application/json', 'application/xml'],
-          produces: ['application/json'],
-          parameters: [...this.getQueries()],
-          responses: {
-            '200': {
-              description: 'Successful',
-              schema: {
-                type: 'array',
-                items: {
-                  $ref: `#/definitions/${model.name.toLowerCase()}`,
-                },
-              },
-            },
-            '400': {
-              description: 'Bad request',
-            },
-            '404': {
-              description: 'Not found',
-            },
+        });
+        break;
+      default:
+        break;
+    }
+
+    return Object.assign(responses, {
+      400: {
+        description: 'Bad request',
+      },
+      404: {
+        description: 'Not found',
+      },
+    });
+  };
+
+  private getComponents = () => {
+    const components: { schemas: { [key: string]: any } } = { schemas: {} };
+    this.models.forEach((model) => {
+      const properties = {};
+      Object.keys(model.settings.properties).forEach((propKey) =>
+        Object.assign(properties, {
+          [propKey]: {
+            type: model.settings.properties[propKey].type,
           },
-        },
+        }),
+      );
+
+      const component = {
+        type: 'object',
+        properties,
       };
 
-      if (!(key in path)) {
-        path[key] = defaultDefinition;
+      if (!(model.name in components.schemas)) {
+        components.schemas[model.name] = component;
       } else {
-        Object.assign(path[key], defaultDefinition);
+        Object.assign(components.schemas[model.name], component);
       }
     });
-    return path;
+
+    return components;
   };
 
   private getDefinitions = () => {

@@ -2,7 +2,6 @@ import { IRoute, Router } from 'express';
 import { Model, ModelCtor } from 'sequelize';
 
 import { ModelSettings } from './Definition';
-import {} from '../Controller/BaseController';
 import { KeysOfBaseController, BaseController } from '../Controller';
 
 export interface BaseModelProps {
