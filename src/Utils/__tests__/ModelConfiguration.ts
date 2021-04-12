@@ -1,9 +1,10 @@
+import { env } from '../env';
+
 import { ModelConfiguration } from '../ModelConfiguration';
-import path from 'path';
 
 describe('Model configuration should be found and rendered correctly and it', () => {
   const modelConfigurations = new ModelConfiguration({
-    pathToConfig: path.join('src', 'Utils', '__tests__', 'fixtures'),
+    pathToConfig: env.JAXA_CONFIGURATION_PATH,
   });
 
   const attributes = modelConfigurations.getAttributes();
@@ -12,11 +13,11 @@ describe('Model configuration should be found and rendered correctly and it', ()
     expect(attributes).toBeDefined();
   });
 
-  it('should find the model base definition', () => {
+  it('should find the model base settings', () => {
     expect(attributes.Model).toBeDefined();
   });
 
-  it('should find the Model definition', () => {
+  it('should find the model definitions', () => {
     expect(attributes.Model.definition).toBeDefined();
   });
 
@@ -26,7 +27,9 @@ describe('Model configuration should be found and rendered correctly and it', ()
     expect(attributes.Model.definition.type).toBe('persisted');
   });
 
-  it('should define model properties', () => {
+  it('should define the model properties', () => {
     expect(attributes.Model.properties).toBeDefined();
   });
+
+  // TODO - Add tests for Properties and relations
 });
