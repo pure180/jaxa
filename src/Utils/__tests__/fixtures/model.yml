@@ -1,0 +1,25 @@
+definition:
+  description: Model Table
+  name: model
+  plural: models
+  type: persisted
+properties: 
+  name:
+    type: string
+    required: true
+  place: 
+    type: string
+    required: true
+  typeOfFood: 
+    type: string
+    required: true
+  bigInt:
+    type: bigint
+    required: true
+    length: 10
+relations: 
+  relation:
+    model: relation
+    type: hasMany
+    options: 
+      as: users
