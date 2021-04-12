@@ -28,12 +28,18 @@ export class Sequelizer {
       storage,
     } = SQLiteSettings();
 
-    this.sequelize = new Sequelize(database, user, password, {
-      logging: false,
-      host,
-      dialect,
-      storage,
-    });
+    if (database === 'sqlite::memory:') {
+      this.sequelize = new Sequelize(database, {
+        logging: false,
+      });
+    } else {
+      this.sequelize = new Sequelize(database, user, password, {
+        logging: false,
+        host,
+        dialect,
+        storage,
+      });
+    }
   }
 
   public defineModels = () => {
