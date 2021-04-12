@@ -12,8 +12,8 @@
     "lint:fix": "npm run lint -- --fix",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
     "start": "npm run build && cross-env NODE_ENV=production node build/server.js",
-    "test": "ENV_FILE=./.env.test jest",
-    "test:watch": "ENV_FILE=./.env.test jest --watch"
+    "test": "cross-env ENV_FILE=./.env.test jest",
+    "test:watch": "cross-env ENV_FILE=./.env.test jest --watch"
   },
   "prettier": {
     "printWidth": 80,
