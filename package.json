@@ -31,6 +31,7 @@
     "hpp": "^0.2.3",
     "kill-port": "^1.6.1",
     "morgan": "^1.10.0",
+    "openapi-types": "^7.2.3",
     "sequelize": "^6.6.2",
     "sqlite3": "^5.0.2",
     "swagger-ui-express": "^4.1.6",
