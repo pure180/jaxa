@@ -13,6 +13,10 @@ properties:
   typeOfFood: 
     type: string
     required: true
+  bigInt:
+    type: bigint
+    required: true
+    length: 10
 relations: 
   users:
     model: User
