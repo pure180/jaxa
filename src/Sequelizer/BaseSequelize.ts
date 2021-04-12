@@ -64,8 +64,9 @@ export class BaseSequelize<M extends Model = Model> {
     switch (type.toLowerCase()) {
       case 'boolean':
         return DataTypes.BOOLEAN;
+      case 'integer':
       case 'number':
-        return DataTypes.NUMBER;
+        return DataTypes.INTEGER;
       case 'bigint':
         if (typeof length === 'number') {
           return DataTypes.BIGINT({ length });
