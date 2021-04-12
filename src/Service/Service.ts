@@ -20,7 +20,7 @@ export class Service<Model extends Object = {}> {
     try {
       return await this.model.count(query);
     } catch (error) {
-      throw new createError.UnprocessableEntity({ ...error });
+      throw new createError.BadRequest({ ...error });
     }
   };
 
@@ -31,7 +31,7 @@ export class Service<Model extends Object = {}> {
     try {
       return await this.model.create(body);
     } catch (error) {
-      throw new createError.BadRequest({ ...error });
+      throw new createError.UnprocessableEntity({ ...error });
     }
   };
 
