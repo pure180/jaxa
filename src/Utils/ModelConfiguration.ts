@@ -13,6 +13,10 @@ export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+export const lowerCaseFirstLetter = (string: string) => {
+  return string.charAt(0).toLowerCase() + string.slice(1);
+};
+
 export class ModelConfiguration {
   protected baseDir: string = process.cwd();
   protected pathToConfig: string;
@@ -32,7 +36,9 @@ export class ModelConfiguration {
       return undefined;
     }
 
-    return files.filter((file) => ['yml, yaml'].indexOf(extname(file).toLowerCase())).map((file) => join(this.pathToConfig, file));
+    return files
+      .filter((file) => ['yml, yaml'].indexOf(extname(file).toLowerCase()))
+      .map((file) => join(this.pathToConfig, file));
   }
 
   private parseConfig() {
