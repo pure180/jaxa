@@ -5,6 +5,7 @@ import {
   ModelConfiguration,
   ModelAttributes,
   capitalizeFirstLetter,
+  lowerCaseFirstLetter,
 } from '../Utils/ModelConfiguration';
 import { SQLiteSettings } from '../Utils/SQLite';
 import BaseService from './BaseSequelize';
@@ -50,6 +51,8 @@ export class Sequelizer {
   public defineModelRelations = () => {
     Object.keys(this.attributes).forEach((key) => {
       const { relations, definition } = this.attributes[key];
+      console.log(definition);
+
       if (relations) {
         this.sequelizeRelationalModels(
           relations,
@@ -87,6 +90,12 @@ export class Sequelizer {
     modelName: string,
   ) => {
     for (const [key, { model, type, options }] of Object.entries(relations)) {
+      const settings = {
+        foreignKey:
+          options?.foreignKey || `${lowerCaseFirstLetter(modelName)}Id`,
+        ...(options || {}),
+      };
+
       const relationalModelName = capitalizeFirstLetter(model);
       const relationalModel = this.sequelize.models[relationalModelName];
       if (relationalModel && this.sequelize.models[modelName]) {
@@ -94,13 +103,13 @@ export class Sequelizer {
           case ModelRelationType.HasMany:
             this.sequelize.models[modelName].hasMany(
               relationalModel,
-              options || {},
+              settings || {},
             );
             break;
           case ModelRelationType.HasOne:
             this.sequelize.models[modelName].hasOne(
               relationalModel,
-              options || {},
+              settings || {},
             );
             break;
           case ModelRelationType.BelongsTo:
@@ -112,7 +121,7 @@ export class Sequelizer {
           case ModelRelationType.BelongsToMany:
             this.sequelize.models[modelName].belongsToMany(
               relationalModel,
-              (options as BelongsToManyOptions) || {},
+              (settings as BelongsToManyOptions) || {},
             );
             break;
         }
