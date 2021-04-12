@@ -11,7 +11,7 @@ export const SQLiteSettings = (): {
   dialect: Dialect;
   storage: string;
 } => {
-  const dataBasePath = path.join(process.cwd(), 'tmp');
+  const dataBasePath = path.join(process.cwd(), 'temp');
 
   if (!fs.existsSync(dataBasePath)) {
     fs.mkdirSync(dataBasePath);
