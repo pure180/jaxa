@@ -2,18 +2,16 @@ import pkg, { PackageDefinition } from '../Utils/PackageDefinition';
 import swaggerUi from 'swagger-ui-express';
 
 import express from 'express';
-import { Sequelize } from 'sequelize';
 import Sequelizer from '../Sequelizer/Sequelizer';
 import { capitalizeFirstLetter } from '../Utils/ModelConfiguration';
 import { BaseModel } from '../Model/BaseModel';
-import { stringify } from 'yaml';
 import { BaseController } from '../Controller';
+import { OpenAPIV3 } from 'openapi-types';
 
 export interface SwaggerProps {
   app: express.Application;
   models: BaseModel[];
   path?: string;
-  router: express.Router;
   sequelizer: Sequelizer;
 }
 
@@ -22,13 +20,11 @@ export class Swagger {
   private models: BaseModel[];
   private packageInfo: PackageDefinition = pkg;
   private path: string;
-  private router: express.Router;
   private sequelizer: Sequelizer;
 
-  constructor({ app, models, path, router, sequelizer }: SwaggerProps) {
+  constructor({ app, models, path, sequelizer }: SwaggerProps) {
     this.app = app;
     this.path = path || '/swagger';
-    this.router = router;
     this.sequelizer = sequelizer;
     this.models = models;
   }
@@ -37,33 +33,53 @@ export class Swagger {
     this.app.use(this.path, swaggerUi.serve, swaggerUi.setup(this.getSetup()));
   };
 
-  private getSetup = (): swaggerUi.JsonObject => {
-    return {
-      openapi: '3.0.0',
-      // swagger: '2.0',
-      info: {
-        description: this.packageInfo.description,
-        version: this.packageInfo.version,
-        termsOfService: '',
-        contact: {
-          email: 'info@daniel-pfisterer.de',
-        },
-        license: {
-          name: this.packageInfo.license,
-          url: '',
+  private getComponents = (): OpenAPIV3.ComponentsObject => ({
+    schemas: this.getSchemas(),
+  });
+
+  private getSetup = (): OpenAPIV3.Document => ({
+    openapi: '3.0.0',
+    // swagger: '2.0',
+    info: {
+      description: this.packageInfo.description,
+      version: this.packageInfo.version,
+      termsOfService: '',
+      contact: {
+        email: 'info@daniel-pfisterer.de',
+      },
+      license: {
+        name: this.packageInfo.license,
+        url: '',
+      },
+      title: this.packageInfo.name,
+    },
+    servers: [
+      {
+        url: '{protocol}://localhost:{port}{basePath}', // TODO - User real data
+        description: 'Local development Server',
+        variables: {
+          protocol: {
+            enum: ['http', 'https'],
+            default: 'http',
+          },
+          basePath: {
+            default: this.app.mountpath.toString(),
+          },
+          port: {
+            enum: ['80', '443'],
+            default: '1337',
+          },
         },
       },
-      host: 'localhost:1337',
-      basePath: this.app.mountpath,
-      tags: this.getTags(),
-      schemes: ['https', 'http'],
-      paths: this.getPaths(),
-      definitions: this.getDefinitions(),
-      components: this.getComponents(),
-    };
-  };
+    ],
+    // basePath: this.app.mountpath,
+    tags: this.getTags(),
+    // schemes: ['https', 'http'],
+    paths: this.getPaths(),
+    components: this.getComponents(),
+  });
 
-  private getTags = (): { [key: string]: unknown }[] => {
+  private getTags = (): OpenAPIV3.TagObject[] => {
     const models = this.sequelizer.attributes;
     return Object.keys(models).map((key) => {
       const { name, description } = models[key].definition;
@@ -162,6 +178,7 @@ export class Swagger {
                         },
                       }
                     : {
+                        type: 'object',
                         $ref: `#/components/schemas/${modelName}`,
                       },
               },
@@ -183,57 +200,70 @@ export class Swagger {
     });
   };
 
-  private getComponents = () => {
-    const components: { schemas: { [key: string]: any } } = { schemas: {} };
-    this.models.forEach((model) => {
-      const properties = {};
-      Object.keys(model.settings.properties).forEach((propKey) =>
-        Object.assign(properties, {
-          [propKey]: {
-            type: model.settings.properties[propKey].type,
-          },
-        }),
-      );
+  private getSchemas = () => {
+    const schemas: OpenAPIV3.ComponentsObject['schemas'] = {};
 
-      const component = {
+    this.models.forEach((model) => {
+      const sequelizeModel = this.sequelizer.sequelize.models[model.name];
+      const properties: OpenAPIV3.BaseSchemaObject['properties'] = {};
+
+      Object.keys(sequelizeModel.rawAttributes).forEach((key) => {
+        const rawAttribute = sequelizeModel.rawAttributes[key];
+        const fieldName = rawAttribute.field || key;
+        if (!(fieldName in properties)) {
+          const type = this.getDataType(rawAttribute.type.toString({}));
+
+          properties[fieldName] = {
+            ...(type || {}),
+            nullable: rawAttribute.allowNull,
+          };
+        }
+      });
+
+      const associations = sequelizeModel.associations;
+
+      Object.keys(associations).forEach((associationKey) => {
+        const association = associations[associationKey];
+        const associationType = association.associationType;
+        const isArray =
+          associationType === 'HasMany' || associationType === 'BelongsToMany'
+            ? true
+            : false;
+        const associationName = capitalizeFirstLetter(
+          (association as any).options.name.singular,
+        );
+        const as = isArray
+          ? (association as any).options.name.plural
+          : (association as any).options.name.singular;
+
+        // if (isArray) {
+        //   properties[association.foreignKey] = {
+        //     $ref: `#/components/schemas/${associationName}/${association.source.primaryKeyAttribute}`,
+        //   };
+        // }
+        properties[as] = isArray
+          ? {
+              items: { $ref: `#/components/schemas/${associationName}` },
+              type: 'array',
+            }
+          : {
+              $ref: `#/components/schemas/${associationName}`,
+            };
+      });
+
+      const schema: OpenAPIV3.NonArraySchemaObject = {
         type: 'object',
         properties,
       };
 
-      if (!(model.name in components.schemas)) {
-        components.schemas[model.name] = component;
+      if (!(model.name in schemas)) {
+        schemas[model.name] = schema;
       } else {
-        Object.assign(components.schemas[model.name], component);
+        Object.assign(schemas[model.name], schema);
       }
     });
 
-    return components;
-  };
-
-  private getDefinitions = () => {
-    const definitions: { [key: string]: unknown } = {};
-    this.models.forEach((model) => {
-      const properties = {};
-      Object.keys(model.settings.properties).forEach((propKey) =>
-        Object.assign(properties, {
-          [propKey]: {
-            type: model.settings.properties[propKey].type,
-          },
-        }),
-      );
-
-      const definition = {
-        type: 'object',
-        properties,
-      };
-
-      if (!(model.name in definitions)) {
-        definitions[model.name.toLowerCase()] = definition;
-      } else {
-        Object.assign(definitions[model.name.toLowerCase()], definition);
-      }
-    });
-    return definitions;
+    return schemas;
   };
 
   private getQueries = () => {
@@ -355,4 +385,45 @@ export class Swagger {
     required,
     schema: { type },
   });
+
+  private getDataType = (
+    type: string,
+  ): OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject | undefined => {
+    const match = type.match(/(\D*)\((\d*)\)|(\D*)/);
+    if (!match) {
+      return undefined;
+    }
+
+    const definition = match[1] || match[0];
+    const maxLength = (match[2] && Number(match[2])) || undefined;
+
+    if (!definition) {
+      return undefined;
+    }
+
+    switch (definition) {
+      case 'TEXT':
+      case 'CITETEXT':
+      case 'VARCHAR':
+        return {
+          type: 'string',
+          maxLength,
+        };
+      case 'BIGINT':
+      case 'INTEGER':
+        return {
+          type: 'integer',
+          maxLength,
+        };
+      case 'DATE':
+      case 'DATEONLY':
+      case 'DATETIME':
+        return {
+          type: 'string',
+          format: 'date-time',
+        };
+      default:
+        return undefined;
+    }
+  };
 }

@@ -159,7 +159,6 @@ export class App {
     const swagger = new Swagger({
       app: this.app,
       models,
-      router: this.router,
       sequelizer: sequelizer,
     });
 
