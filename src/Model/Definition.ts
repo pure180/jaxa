@@ -31,6 +31,7 @@ export enum ModelRelationType {
 }
 
 export interface ModelRelation {
+  foreignKey?: unknown;
   model: string;
   type: ModelRelationType;
   options?:
