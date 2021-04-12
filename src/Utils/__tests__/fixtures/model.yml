@@ -7,16 +7,19 @@ properties:
   name:
     type: string
     required: true
-  place: 
-    type: string
+  number: 
+    type: integer
     required: true
-  typeOfFood: 
-    type: string
+  boolean: 
+    type: boolean
     required: true
   bigInt:
     type: bigint
     required: true
     length: 10
+  optional:
+    type: string
+    required: false
 relations: 
   relation:
     model: relation
