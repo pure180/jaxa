@@ -1,5 +1,5 @@
 import { IRoute, Router } from 'express';
-import { Model, ModelCtor } from 'sequelize';
+import { Model, ModelCtor, SyncOptions } from 'sequelize';
 
 import { ModelSettings } from './Definition';
 import { KeysOfBaseController, BaseController } from '../Controller';
@@ -42,9 +42,9 @@ export class BaseModel {
     });
   };
 
-  public initialize = async () => {
+  public initialize = async (options?: SyncOptions) => {
     try {
-      await this.service.sync();
+      await this.service.sync(options);
       this.initializeRoutes();
     } catch (error) {
       throw error;
