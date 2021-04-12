@@ -51,7 +51,6 @@ export class Sequelizer {
   public defineModelRelations = () => {
     Object.keys(this.attributes).forEach((key) => {
       const { relations, definition } = this.attributes[key];
-      console.log(definition);
 
       if (relations) {
         this.sequelizeRelationalModels(

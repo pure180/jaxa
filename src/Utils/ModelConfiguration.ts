@@ -1,7 +1,9 @@
 import YAML from 'yaml';
-import { readdirSync, existsSync, readFileSync } from 'fs';
-import { join, extname, basename } from 'path';
+import { existsSync, readdirSync, readFileSync } from 'fs';
+import { basename, extname, join } from 'path';
+
 import { ModelSettings } from '../Model/Definition';
+import { env } from './env';
 
 export interface ModelConfigurationProps {
   pathToConfig?: string;
@@ -22,7 +24,10 @@ export class ModelConfiguration {
   protected pathToConfig: string;
 
   constructor(props?: ModelConfigurationProps) {
-    this.pathToConfig = join(this.baseDir, props?.pathToConfig || 'config');
+    this.pathToConfig = join(
+      this.baseDir,
+      props?.pathToConfig || env.JAXA_CONFIGURATION_PATH || 'config',
+    );
   }
 
   private getConfigFiles() {

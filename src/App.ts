@@ -7,16 +7,11 @@ import cors, { CorsOptions } from 'cors';
 import express, { NextFunction, Request, Response, Router } from 'express';
 import { HttpError } from 'http-errors';
 
-import { logger, stream } from './Utils/Logger';
 import Sequelizer from './Sequelizer/Sequelizer';
+import { logger, stream } from './Utils/Logger';
 import { PackageDefinition } from './Utils/PackageDefinition';
 import { Swagger } from './Swagger/Swagger';
-
-enum EnvKeys {
-  Development = 'development',
-  Production = 'production',
-  Staging = 'staging',
-}
+import { env, EnvKeys } from './Utils/env';
 
 /**
  *
@@ -54,9 +49,8 @@ export class App {
   constructor(settings?: AppSettings) {
     this.app = express();
     this.app.mountpath = '/api/v1';
-    this.env =
-      (process.env.NODE_ENV as EnvKeys | undefined) || EnvKeys.Development;
-    this.port = Number(process.env.PORT) || 1337;
+    this.env = (env.NODE_ENV as EnvKeys | undefined) || EnvKeys.development;
+    this.port = Number(env.PORT) || 1337;
     this.settings = settings;
     this.router = Router({ mergeParams: true });
   }
@@ -96,7 +90,7 @@ export class App {
    * @returns void -
    */
   private initializeMiddleware() {
-    if (this.env === EnvKeys.Development) {
+    if (this.env === EnvKeys.development) {
       this.app.use(morgan('dev', { stream }));
       this.app.use(
         cors({
