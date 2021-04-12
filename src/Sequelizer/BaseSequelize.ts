@@ -66,11 +66,16 @@ export class BaseSequelize<M extends Model = Model> {
         return DataTypes.BOOLEAN;
       case 'number':
         return DataTypes.NUMBER;
+      case 'bigint':
+        if (typeof length === 'number') {
+          return DataTypes.BIGINT({ length });
+        }
+        return DataTypes.BIGINT();
       case 'string':
         if (typeof length === 'number') {
-          return DataTypes.STRING(length);
+          return DataTypes.STRING({ length });
         }
-        return DataTypes.STRING(length);
+        return DataTypes.STRING();
       default:
         return DataTypes.STRING;
     }
