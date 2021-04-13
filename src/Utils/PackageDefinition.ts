@@ -1,4 +1,4 @@
-import pkg from '../../package.json';
+const pkg = require('../../package.json');
 
 const getPackageDefinition = () => pkg;
 export type PackageDefinition = ReturnType<typeof getPackageDefinition>;

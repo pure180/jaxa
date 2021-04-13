@@ -427,3 +427,5 @@ export class Swagger {
     }
   };
 }
+
+export default Swagger;
