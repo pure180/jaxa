@@ -1,6 +1,15 @@
+import { Model } from 'sequelize/types';
 import { BaseModel } from '../../Model/BaseModel';
 import { Sequelizer } from '../../Sequelizer/Sequelizer';
 import { Service } from '../Service';
+
+interface TestData {
+  id?: string | number;
+  firstName: string;
+  number: number;
+  boolean: boolean;
+  bigInt: number;
+}
 
 describe('Service should be initialized and a connection a database established and it', () => {
   const sequelizer = new Sequelizer();
@@ -13,9 +22,9 @@ describe('Service should be initialized and a connection a database established 
   });
 
   it('should successfully create a dataset of the model defined in the fixture with valid data', async () => {
-    const service = new Service(models[0].service);
-    const testData = {
-      name: 'Name',
+    const service = new Service<TestData>(models[0].service);
+    const testData: TestData = {
+      firstName: 'Name',
       number: 123,
       boolean: true,
       bigInt: 123456789,
@@ -23,10 +32,9 @@ describe('Service should be initialized and a connection a database established 
 
     const data = await service.create(testData);
 
-    expect.assertions(3);
     expect(data).toBeDefined();
-    expect(data.name).toBe(testData.name);
-    expect(data.id).toBeDefined();
+    expect((data as any).firstName).toBe(testData.firstName);
+    expect((data as any).id).toBeDefined();
   });
 
   it('should throw an error, because of invalid data', async () => {

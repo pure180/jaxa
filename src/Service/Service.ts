@@ -1,10 +1,14 @@
 import { FindOptions, Model, ModelCtor } from 'sequelize/types';
 import createError from 'http-errors';
 
-export class Service<M> {
-  private model?: ModelCtor<any>;
+interface Base {
+  id?: string | number;
+}
 
-  constructor(model?: ModelCtor<M>) {
+export class Service<M extends Base> {
+  private model?: ModelCtor<Model<M>>;
+
+  constructor(model?: ModelCtor<Model<M>>) {
     this.model = model;
   }
 
@@ -23,7 +27,7 @@ export class Service<M> {
     }
   };
 
-  public create = async (body: Model) => {
+  public create = async (body: M) => {
     if (!this.model) {
       return this.noModelError();
     }
@@ -78,7 +82,7 @@ export class Service<M> {
     }
   };
 
-  public updateById = async (id: string | number, body: Model) => {
+  public updateById = async (id: string | number, body: M) => {
     if (!this.model) {
       return this.noModelError();
     }
