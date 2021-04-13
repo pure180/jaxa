@@ -1,11 +1,10 @@
-import { query } from 'express';
 import { FindOptions, Model, ModelCtor } from 'sequelize/types';
 import createError from 'http-errors';
 
-export class Service<Model extends Object = {}> {
+export class Service<M> {
   private model?: ModelCtor<any>;
 
-  constructor(model?: ModelCtor<any>) {
+  constructor(model?: ModelCtor<M>) {
     this.model = model;
   }
 
@@ -95,3 +94,5 @@ export class Service<Model extends Object = {}> {
     }
   };
 }
+
+export default Service;

@@ -1,5 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
-import { Router } from 'express';
+import express, { NextFunction, Request, Response, Router } from 'express';
 
 export interface BaseRouteProps {
   path?: string;
@@ -11,6 +10,7 @@ export interface BaseRouteProps {
 
 export class BaseRoute {
   public basePath: string;
+
   public router: Router;
 
   constructor({ path, app, forModel, name, routerOptions }: BaseRouteProps) {

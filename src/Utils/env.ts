@@ -3,6 +3,7 @@ import { Dialect } from 'sequelize';
 import dotenv from 'dotenv';
 import path from 'path';
 
+// eslint-disable-next-line no-shadow
 export enum EnvKeys {
   development = 'development',
   production = 'production',
@@ -16,7 +17,7 @@ dotenv.config({
     `.env${
       (process.env.NODE_ENV !== EnvKeys.development &&
         EnvKeys[process.env.NODE_ENV as EnvKeys] &&
-        '.' + EnvKeys[process.env.NODE_ENV as EnvKeys]) ||
+        `.${EnvKeys[process.env.NODE_ENV as EnvKeys]}`) ||
       ''
     }`,
   ),

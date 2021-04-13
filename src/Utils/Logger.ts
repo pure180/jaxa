@@ -1,6 +1,6 @@
 import fs from 'fs';
 import winston from 'winston';
-import winstonDaily from 'winston-daily-rotate-file';
+import WinstonDaily from 'winston-daily-rotate-file';
 import path from 'path';
 
 // logs dir
@@ -14,7 +14,9 @@ if (!fs.existsSync(logDir)) {
 const { combine, timestamp, printf } = winston.format;
 
 // Define log format
-const logFormat = printf(({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`);
+const logFormat = printf(
+  ({ time, level, message }) => `${time} ${level}: ${message}`,
+);
 
 /*
  * Log Level
@@ -29,20 +31,20 @@ const logger = winston.createLogger({
   ),
   transports: [
     // info log setting
-    new winstonDaily({
+    new WinstonDaily({
       level: 'info',
       datePattern: 'YYYY-MM-DD',
-      dirname: logDir + '/info', // log file /logs/info/*.log in save
+      dirname: `${logDir}/info`, // log file /logs/info/*.log in save
       filename: `%DATE%.log`,
       maxFiles: 30, // 30 Days saved
       json: false,
       zippedArchive: true,
     }),
     // error log setting
-    new winstonDaily({
+    new WinstonDaily({
       level: 'error',
       datePattern: 'YYYY-MM-DD',
-      dirname: logDir + '/error', // log file /logs/error/*.log in save
+      dirname: `${logDir}/error`, // log file /logs/error/*.log in save
       filename: `%DATE%.error.log`,
       maxFiles: 30, // 30 Days saved
       handleExceptions: true,
@@ -54,7 +56,11 @@ const logger = winston.createLogger({
 
 logger.add(
   new winston.transports.Console({
-    format: winston.format.combine(winston.format.splat(), winston.format.colorize(), winston.format.simple()),
+    format: winston.format.combine(
+      winston.format.splat(),
+      winston.format.colorize(),
+      winston.format.simple(),
+    ),
   }),
 );
 

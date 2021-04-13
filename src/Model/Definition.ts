@@ -5,6 +5,7 @@ import {
   HasOneOptions,
 } from 'sequelize/types';
 
+// eslint-disable-next-line no-shadow
 export enum ModelType {
   Persisted = 'persisted',
 }
@@ -23,6 +24,7 @@ export interface ModelProperty {
   type: string;
 }
 
+// eslint-disable-next-line no-shadow
 export enum ModelRelationType {
   HasOne = 'hasOne',
   BelongsTo = 'belongsTo',

@@ -1,12 +1,12 @@
-import pkg, { PackageDefinition } from '../Utils/PackageDefinition';
 import swaggerUi from 'swagger-ui-express';
-
 import express from 'express';
+import { OpenAPIV3 } from 'openapi-types';
+import pkg, { PackageDefinition } from '../Utils/PackageDefinition';
+
 import Sequelizer from '../Sequelizer/Sequelizer';
 import { capitalizeFirstLetter } from '../Utils/ModelConfiguration';
 import { BaseModel } from '../Model/BaseModel';
 import { BaseController } from '../Controller';
-import { OpenAPIV3 } from 'openapi-types';
 
 export interface SwaggerProps {
   app: express.Application;
@@ -17,9 +17,13 @@ export interface SwaggerProps {
 
 export class Swagger {
   private app: express.Application;
+
   private models: BaseModel[];
+
   private packageInfo: PackageDefinition = pkg;
+
   private path: string;
+
   private sequelizer: Sequelizer;
 
   constructor({ app, models, path, sequelizer }: SwaggerProps) {
@@ -96,12 +100,12 @@ export class Swagger {
       const routes = model.baseRoutes();
       routes.forEach((baseRoute) => {
         const route =
-          baseRoute.route.length > 0 && /\/\:/.test(baseRoute.route)
+          baseRoute.route.length > 0 && /\/:/.test(baseRoute.route)
             ? `/{${baseRoute.route.replace('/:', '')}}`
             : (baseRoute.route.length > 1 && baseRoute.route) || '';
 
         const key = `/${model.path}${route}`;
-        const handler = baseRoute.handler;
+        const { handler } = baseRoute;
 
         if (!(key in paths)) {
           paths[key] = {};
@@ -135,6 +139,7 @@ export class Swagger {
           type: 'string',
         });
 
+      // eslint-disable-next-line no-fallthrough
       case 'create':
         if (method !== 'deleteById' && method !== 'findById') {
           parameters.push({
@@ -151,6 +156,8 @@ export class Swagger {
       case 'count':
       case 'findAll':
         parameters.push(...this.getQueries());
+        break;
+      default:
         break;
     }
 
@@ -220,15 +227,14 @@ export class Swagger {
         }
       });
 
-      const associations = sequelizeModel.associations;
+      const { associations } = sequelizeModel;
 
       Object.keys(associations).forEach((associationKey) => {
         const association = associations[associationKey];
-        const associationType = association.associationType;
-        const isArray =
+        const { associationType } = association;
+        const isArray = !!(
           associationType === 'HasMany' || associationType === 'BelongsToMany'
-            ? true
-            : false;
+        );
         const associationName = capitalizeFirstLetter(
           (association as any).options.name.singular,
         );

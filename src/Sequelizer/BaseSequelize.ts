@@ -6,11 +6,7 @@ import {
   Sequelize,
 } from 'sequelize';
 
-import {
-  ModelDefinition,
-  ModelProperty,
-  ModelSettings,
-} from '../Model/Definition';
+import { ModelProperty, ModelSettings } from '../Model/Definition';
 import { capitalizeFirstLetter } from '../Utils/ModelConfiguration';
 
 export interface BaseSequelizeProps {
@@ -21,7 +17,9 @@ export interface BaseSequelizeProps {
 
 export class BaseSequelize<M extends Model = Model> {
   private name: string;
+
   private props: BaseSequelizeProps;
+
   private sequelize: Sequelize;
 
   constructor(props: BaseSequelizeProps) {
@@ -40,8 +38,8 @@ export class BaseSequelize<M extends Model = Model> {
       Object.assign(attributes, {
         [key]: {
           type: this.resolveAttributeType(type, length),
-          allowNull: required ? false : true,
-          primaryKey: isId ? true : false,
+          allowNull: !required,
+          primaryKey: !!isId,
           autoIncrement: (isId && true) || false,
         },
       });
@@ -57,10 +55,10 @@ export class BaseSequelize<M extends Model = Model> {
     };
   }
 
-  private resolveAttributeType(
+  private resolveAttributeType = (
     type: ModelProperty['type'],
     length?: ModelProperty['length'],
-  ): ModelAttributes['type'] {
+  ): ModelAttributes['type'] => {
     switch (type.toLowerCase()) {
       case 'boolean':
         return DataTypes.BOOLEAN;
@@ -80,7 +78,7 @@ export class BaseSequelize<M extends Model = Model> {
       default:
         return DataTypes.STRING;
     }
-  }
+  };
 
   public defineModel = () => {
     const attributes = this.getModelAttributes();

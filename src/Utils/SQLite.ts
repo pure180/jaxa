@@ -30,3 +30,5 @@ export const SQLiteSettings = (): {
     storage: path.join(dataBasePath, 'db.sqlite'),
   };
 };
+
+export default SQLiteSettings;

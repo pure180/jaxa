@@ -21,6 +21,7 @@ export const lowerCaseFirstLetter = (string: string) => {
 
 export class ModelConfiguration {
   protected baseDir: string = process.cwd();
+
   protected pathToConfig: string;
 
   constructor(props?: ModelConfigurationProps) {
@@ -46,7 +47,7 @@ export class ModelConfiguration {
       .map((file) => join(this.pathToConfig, file));
   }
 
-  private parseConfig() {
+  private parseConfig(): { [key: string]: ModelSettings } | undefined {
     const files = this.getConfigFiles();
 
     if (!files || files.length === 0) {

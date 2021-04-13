@@ -1,4 +1,3 @@
-import sequelize from 'sequelize';
 import { BaseModel } from '../../Model/BaseModel';
 import Sequelizer from '../Sequelizer';
 
@@ -6,7 +5,7 @@ describe('Sequelizer should initialize without errors and create the models and 
   const sequelizer = new Sequelizer();
 
   it('should have the model attributes', () => {
-    const attributes = sequelizer.attributes;
+    const { attributes } = sequelizer;
     expect.assertions(4);
     expect(attributes).toBeDefined();
     expect(attributes.Model).toBeDefined();

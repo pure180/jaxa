@@ -1,4 +1,3 @@
-import httpError from 'http-errors';
 import { BaseModel } from '../../Model/BaseModel';
 import { Sequelizer } from '../../Sequelizer/Sequelizer';
 import { Service } from '../Service';

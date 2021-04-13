@@ -12,9 +12,13 @@ export interface BaseModelProps {
 
 export class BaseModel {
   public name: string;
+
   public path: string;
+
   public router: Router;
+
   public service: ModelCtor<Model<any, any>>;
+
   public settings: ModelSettings;
 
   constructor(props: BaseModelProps) {
@@ -31,7 +35,7 @@ export class BaseModel {
   };
 
   private getPath = () =>
-    `${this.settings.definition.plural || this.settings.definition.name + 's'}`;
+    `${this.settings.definition.plural || `${this.settings.definition.name}s`}`;
 
   private initializeRoutes = () => {
     const controller = this.getController();
@@ -43,12 +47,8 @@ export class BaseModel {
   };
 
   public initialize = async (options?: SyncOptions) => {
-    try {
-      await this.service.sync(options);
-      this.initializeRoutes();
-    } catch (error) {
-      throw error;
-    }
+    await this.service.sync(options);
+    this.initializeRoutes();
   };
 
   public baseRoutes = (): {

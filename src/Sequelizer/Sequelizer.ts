@@ -12,7 +12,9 @@ import BaseService from './BaseSequelize';
 
 export class Sequelizer {
   public attributes: ModelAttributes;
+
   public sequelize: Sequelize;
+
   public modelConfigurations: ModelConfiguration;
 
   constructor() {
@@ -68,11 +70,7 @@ export class Sequelizer {
   };
 
   public async sequelizeModels() {
-    try {
-      await this.sequelize.authenticate();
-    } catch (error) {
-      throw error;
-    }
+    await this.sequelize.authenticate();
 
     this.defineModels();
 
@@ -94,6 +92,7 @@ export class Sequelizer {
     relations: { [key: string]: ModelRelation },
     modelName: string,
   ) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [key, { model, type, options }] of Object.entries(relations)) {
       const settings = {
         foreignKey:
@@ -104,6 +103,7 @@ export class Sequelizer {
       const relationalModelName = capitalizeFirstLetter(model);
       const relationalModel = this.sequelize.models[relationalModelName];
       if (relationalModel && this.sequelize.models[modelName]) {
+        // eslint-disable-next-line default-case
         switch (type) {
           case ModelRelationType.HasMany:
             this.sequelize.models[modelName].hasMany(

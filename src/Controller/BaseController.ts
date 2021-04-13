@@ -1,10 +1,9 @@
-import { IRouter, NextFunction, Request, Response, Router } from 'express';
-import httpError from 'http-errors';
-import { Model, ModelCtor, BaseError } from 'sequelize';
+import { NextFunction, Request, Response } from 'express';
+import { Model, ModelCtor } from 'sequelize';
 import { Service } from '../Service/Service';
 
 export class BaseController {
-  private service?: Service;
+  private service?: Service<any>;
 
   constructor(model?: ModelCtor<Model<any, any>>) {
     this.service = model && new Service(model);
@@ -30,7 +29,7 @@ export class BaseController {
     }
   };
 
-  public create = async (req: Request, res: Response, next: NextFunction) => {
+  public create = async (req: Request, res: Response) => {
     if (!this.service) {
       return this.noServiceError();
     }
@@ -109,3 +108,5 @@ export class BaseController {
     }
   };
 }
+
+export default BaseController;

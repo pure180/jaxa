@@ -28,9 +28,13 @@ export interface AppSettings {
  */
 export class App {
   private app: express.Application;
+
   private env: EnvKeys;
-  private listening: boolean = false;
+
+  private listening = false;
+
   private port: number;
+
   private router: Router;
 
   /**
@@ -68,6 +72,7 @@ export class App {
         })
         .once('error', (error: HttpError) => {
           if (error.code === 'EADDRINUSE') {
+            // eslint-disable-next-line no-console
             console.info(error.message);
           }
         });
@@ -153,7 +158,7 @@ export class App {
     const swagger = new Swagger({
       app: this.app,
       models,
-      sequelizer: sequelizer,
+      sequelizer,
     });
 
     swagger.initialize();
