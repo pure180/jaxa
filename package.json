@@ -25,11 +25,16 @@
     "build": "tsc",
     "dev": "cross-env NODE_ENV=development nodemon --inspect",
     "jest": "jest --forceExit --detectOpenHandles",
-    "lint:fix": "npm run lint -- --fix",
+    "lint:fix": "yarn lint --fix",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
+    "postversion": "git push && git push --tags",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn test && yarn lint",
+    "preversion": "yarn lint",
     "start": "npm run build && cross-env NODE_ENV=production node build/server.js",
+    "test:watch": "cross-env ENV_FILE=./.env.test jest --watch",
     "test": "cross-env ENV_FILE=./.env.test jest",
-    "test:watch": "cross-env ENV_FILE=./.env.test jest --watch"
+    "version": "git add -A src"
   },
   "prettier": {
     "printWidth": 80,
