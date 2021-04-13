@@ -1,11 +1,26 @@
 {
   "name": "jaxa",
   "description": "Just another express application framework",
+  "keywords": [
+    "express",
+    "framework",
+    "typescript",
+    "sequelize",
+    "swagger"
+  ],
   "version": "1.0.0-alpha.0",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "author": "Daniel Pfisterer (info@daniel-pfisterer.de)",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pure180/jaxa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pure180/jaxa/issues"
+  },
+  "homepage": "https://github.com/pure180/jaxa/issues",
   "scripts": {
     "build": "tsc",
     "dev": "cross-env NODE_ENV=development nodemon --inspect",
