@@ -1,21 +1,8 @@
-# Default
-lerna-debug.log
-node_modules
-npm-debug.log
-.DS_Store
-coverage
-.nyc_output
-**/*.tgz
-
-
 # compiled output
 /dist
 /build
+/node_modules
 /lib
-packages/*/lib
-packages/*/dist
-packages/*/build
-packages/*/node_modules
 
 # Logs
 logs
@@ -47,3 +34,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Temp files
+/temp
+temp/*
