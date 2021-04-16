@@ -34,11 +34,14 @@
     "url": "https://github.com/pure180/jaxa/issues"
   },
   "dependencies": {
+    "cli-select": "^1.1.2",
     "esm": "^3.2.25",
+    "minimist": "^1.2.5",
     "prompt": "^1.1.0"
   },
   "devDependencies": {
     "@types/esm": "^3.2.0",
+    "@types/minimist": "^1.2.1",
     "@types/prompt": "^1.1.0",
     "cross-env": "^7.0.3",
     "eslint": "^7.24.0",
