@@ -1,4 +1,3 @@
-import { Model } from 'sequelize/types';
 import { BaseModel } from '../../Model/BaseModel';
 import { Sequelizer } from '../../Sequelizer/Sequelizer';
 import { Service } from '../Service';

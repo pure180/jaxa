@@ -25,7 +25,7 @@
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
     "postversion": "git push && git push --tags",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run test && npm run lint",
+    "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
     "test:watch": "cross-env ENV_FILE=./.env.test jest --watch",
     "test": "cross-env ENV_FILE=./.env.test jest",
@@ -69,5 +69,5 @@
     "ts-jest": "^26.5.4",
     "typescript": "^4.2.4"
   },
-  "gitHead": "8a2640571c7e332c07d5955f7e5a60ab92d851c4"
+  "gitHead": "65249cd45b7f0207fc69952435575cc3474d13e9"
 }
