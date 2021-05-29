@@ -85,7 +85,9 @@ export const cli = async (args: string[]) => {
         },
       },
     ];
+
     const promptResult = await prompt.get(schema);
+
     if (!promptResult.name) {
       throw new Error('Something went wrong');
     }
@@ -95,7 +97,7 @@ export const cli = async (args: string[]) => {
 
   switch (command) {
     case CliArguments.Project:
-      return createProject(name);
+      return await createProject(name);
     case CliArguments.Model:
       return 'Model';
     default:
