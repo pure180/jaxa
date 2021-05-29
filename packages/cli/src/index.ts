@@ -1,8 +1,7 @@
+import cliSelect from 'cli-select';
 import minimist, { ParsedArgs } from 'minimist';
 import prompt from 'prompt';
-
 import createProject from './createProject';
-import cliSelect from 'cli-select';
 
 const pkg = require('../package.json');
 
@@ -69,6 +68,8 @@ export const cli = async (args: string[]) => {
       case 1:
         command = CliArguments.Model;
         break;
+      default:
+        break;
     }
   }
 
@@ -97,7 +98,7 @@ export const cli = async (args: string[]) => {
 
   switch (command) {
     case CliArguments.Project:
-      return await createProject(name);
+      return createProject(name);
     case CliArguments.Model:
       return 'Model';
     default:
@@ -105,7 +106,7 @@ export const cli = async (args: string[]) => {
 
       const { username, email } = await prompt.get(['username', 'email']);
 
-      console.log('  username: ' + username);
-      console.log('  email: ' + email);
+      console.log('  username: ', username);
+      console.log('  email: ', email);
   }
 };

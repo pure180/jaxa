@@ -16,11 +16,7 @@ export const createProject = async (name?: string) => {
     return console.info('Project already exists');
   }
 
-  try {
-    await mkdirSync(projectDir);
-  } catch (error) {
-    throw error;
-  }
+  await mkdirSync(projectDir);
 
   prompt.start();
 
