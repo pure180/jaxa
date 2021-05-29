@@ -21,14 +21,8 @@ export class Sequelizer {
     this.modelConfigurations = new ModelConfiguration();
     this.attributes = this.modelConfigurations.getAttributes();
 
-    const {
-      database,
-      user,
-      password,
-      host,
-      dialect,
-      storage,
-    } = SQLiteSettings();
+    const { database, user, password, host, dialect, storage } =
+      SQLiteSettings();
 
     if (database === 'sqlite::memory:') {
       this.sequelize = new Sequelize(database, {
@@ -78,9 +72,10 @@ export class Sequelizer {
       const configuration = this.attributes[key];
       const model = new BaseModel({
         name: capitalizeFirstLetter(configuration.definition.name),
-        service: this.sequelize.models[
-          capitalizeFirstLetter(configuration.definition.name)
-        ],
+        service:
+          this.sequelize.models[
+            capitalizeFirstLetter(configuration.definition.name)
+          ],
         settings: this.attributes[key],
       });
 
