@@ -1,6 +1,6 @@
 {
   "name": "@jaxa/cli",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "The basic jaxa cli",
   "author": "Daniel Pfisterer <daniel.pfisterer@power.cloud>",
   "keywords": [],
