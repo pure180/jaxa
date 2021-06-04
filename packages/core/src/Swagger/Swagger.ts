@@ -107,7 +107,7 @@ export class Swagger {
             : (baseRoute.route.length > 1 && baseRoute.route) || '';
 
         const key = `/${model.path}${route}`;
-        const { handler, method } = baseRoute;
+        const { handler } = baseRoute;
 
         if (!(key in paths)) {
           paths[key] = {};
@@ -121,7 +121,7 @@ export class Swagger {
           produces: ['application/json'],
           parameters: this.getParameters(baseRoute.method, model.name), // TODO - Add parameters
           responses: this.getResponses(baseRoute.method, model.name),
-          security: []
+          security: [],
         };
 
         if (handler === 'post' || handler === 'put') {
