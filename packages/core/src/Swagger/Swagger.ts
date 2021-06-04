@@ -34,7 +34,9 @@ export class Swagger {
   }
 
   public initialize = () => {
-    this.app.use(this.path, swaggerUi.serve, swaggerUi.setup(this.getSetup()));
+    const setup = this.getSetup();
+    // console.log(setup.components?.schemas);
+    this.app.use(this.path, swaggerUi.serve, swaggerUi.setup(setup));
   };
 
   private getComponents = (): OpenAPIV3.ComponentsObject => ({
@@ -105,7 +107,7 @@ export class Swagger {
             : (baseRoute.route.length > 1 && baseRoute.route) || '';
 
         const key = `/${model.path}${route}`;
-        const { handler } = baseRoute;
+        const { handler, method } = baseRoute;
 
         if (!(key in paths)) {
           paths[key] = {};
@@ -114,12 +116,28 @@ export class Swagger {
         paths[key][handler] = {
           tags: [model.name],
           summary: '', // TODO - Add Summary
-          operationId: baseRoute.method,
+          operationId: baseRoute.method + capitalizeFirstLetter(model.name),
           consumes: ['application/json', 'application/xml'],
           produces: ['application/json'],
           parameters: this.getParameters(baseRoute.method, model.name), // TODO - Add parameters
           responses: this.getResponses(baseRoute.method, model.name),
+          security: []
         };
+
+        if (handler === 'post' || handler === 'put') {
+          Object.assign(paths[key][handler], {
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: `#/components/schemas/${model.name}`,
+                },
+              },
+            },
+            requestBody: {
+              $ref: `#/components/schemas/${model.name}`,
+            },
+          });
+        }
       });
     });
 
@@ -266,6 +284,24 @@ export class Swagger {
         schemas[model.name] = schema;
       } else {
         Object.assign(schemas[model.name], schema);
+      }
+
+      if (!schemas.requestBody) {
+        schemas.requestBody = {};
+      }
+
+      const requestBody = schemas.requestBody as OpenAPIV3.SchemaObject;
+
+      if (requestBody && !(model.name in requestBody)) {
+        requestBody[model.name as keyof OpenAPIV3.SchemaObject] = {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: `#/components/schemas/${model.name}`,
+              },
+            },
+          },
+        };
       }
     });
 

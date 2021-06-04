@@ -21,6 +21,7 @@ export interface AppSettings {
   domain?: string;
   middleWares?: express.RequestHandler[];
   packageJson?: PackageDefinition;
+  models?: { pathToConfig?: string };
 }
 
 /**
@@ -146,9 +147,13 @@ export class App {
 
     this.app.use(this.app.mountpath, this.router);
 
-    const sequelizer = new Sequelizer();
-    const models = await sequelizer.sequelizeModels();
-    sequelizer.defineModelRelations();
+    const baseSequelizer = new Sequelizer({
+      pathToConfig: this.settings?.models?.pathToConfig,
+    });
+
+    const models = await baseSequelizer.sequelizeModels();
+
+    baseSequelizer.defineModelRelations();
 
     for (const model of models) {
       await model.initialize();
@@ -158,7 +163,7 @@ export class App {
     const swagger = new Swagger({
       app: this.app,
       models,
-      sequelizer,
+      sequelizer: baseSequelizer,
     });
 
     swagger.initialize();

@@ -4,16 +4,18 @@ definition:
   plural: users
   type: persisted
 properties: 
-  lastName:
+  email:
     type: string
     required: true
-  name: 
+  name:
     type: string
-    length: 11
+    required: true
+  password: 
+    type: string
     required: true
 relations: 
   restaurants:
-    model: Restaurant
-    type: belongsTo
+    model: permission
+    type: hasMany
     options: 
-      as: restaurant
+      as: permissions

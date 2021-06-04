@@ -24,19 +24,23 @@ export class ModelConfiguration {
 
   protected pathToConfig: string;
 
+  protected pathToDefaultConfig: string;
+
   constructor(props?: ModelConfigurationProps) {
-    this.pathToConfig = join(
-      this.baseDir,
-      props?.pathToConfig || env.JAXA_CONFIGURATION_PATH || 'config',
-    );
+    this.pathToConfig =
+      props?.pathToConfig ||
+      join(this.baseDir, env.JAXA_CONFIGURATION_PATH || 'config');
+
+    this.pathToDefaultConfig = join(__dirname, '..', '..', 'config');
   }
 
-  private getConfigFiles() {
-    if (!existsSync(this.pathToConfig)) {
+  private getConfigFiles(pathToConfig?: string) {
+    const path = pathToConfig || this.pathToConfig;
+    if (!existsSync(path)) {
       return undefined;
     }
 
-    const files = readdirSync(this.pathToConfig);
+    const files = readdirSync(path);
 
     if (!files || files.length === 0) {
       return undefined;
@@ -44,15 +48,20 @@ export class ModelConfiguration {
 
     return files
       .filter((file) => ['yml, yaml'].indexOf(extname(file).toLowerCase()))
-      .map((file) => join(this.pathToConfig, file));
+      .map((file) => join(path, file));
   }
 
   private parseConfig(): { [key: string]: ModelSettings } | undefined {
-    const files = this.getConfigFiles();
+    const defaultConfigFiles =
+      this.getConfigFiles(this.pathToDefaultConfig) || [];
 
-    if (!files || files.length === 0) {
+    const customFiles = this.getConfigFiles();
+
+    if (!customFiles || customFiles.length === 0) {
       return;
     }
+
+    const files = customFiles.concat(defaultConfigFiles);
 
     const config: { [key: string]: ModelSettings } = {};
 

@@ -17,8 +17,11 @@ export class Sequelizer {
 
   public modelConfigurations: ModelConfiguration;
 
-  constructor() {
-    this.modelConfigurations = new ModelConfiguration();
+  constructor(props?: { pathToConfig?: string }) {
+    this.modelConfigurations = new ModelConfiguration({
+      pathToConfig: props?.pathToConfig,
+    });
+
     this.attributes = this.modelConfigurations.getAttributes();
 
     const { database, user, password, host, dialect, storage } =
