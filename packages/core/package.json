@@ -1,5 +1,5 @@
 {
-  "name": "@jaxa/core",
+  "name": "@jaexa/core",
   "version": "1.0.0-alpha.8",
   "private": false,
   "description": "The base core of just another express application framework",

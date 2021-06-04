@@ -1,15 +1,15 @@
 {
-  "name": "@jaxa/cli",
+  "name": "@jaexa/cli",
   "version": "1.0.0-alpha.8",
-  "description": "The basic jaxa cli",
+  "description": "The basic jaexa cli",
   "author": "Daniel Pfisterer <daniel.pfisterer@power.cloud>",
   "keywords": [],
   "homepage": "https://github.com/pure180/jaxa/blob/make-it-lerna/packages/cli#readme",
   "license": "MIT",
   "main": "./dist/index.js",
   "bin": {
-    "@jaxa/cli": "bin/jaxa",
-    "jaxa": "bin/jaxa"
+    "@jaxa/cli": "bin/jaexa",
+    "jaxa": "bin/jaexa"
   },
   "publishConfig": {
     "access": "public"
