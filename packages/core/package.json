@@ -1,6 +1,6 @@
 {
   "name": "@jaexa/core",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "private": false,
   "description": "The base core of just another express application framework",
   "keywords": [
