@@ -1,8 +1,28 @@
 {
-  "name": "jaexa",
+  "name": "@jaexa/jaexa",
   "version": "1.0.0-alpha.8",
   "private": false,
   "devDependencies": {
     "lerna": "^4.0.0"
-  }
+  },
+  "description": "Just another eXpress API",
+  "main": " ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pure180/jaxa.git"
+  },
+  "keywords": [
+    "Express",
+    "TypeScript",
+    "Sequelize"
+  ],
+  "author": "Daniel Pfisterer (info@daniel-pfisterer.de)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pure180/jaxa/issues"
+  },
+  "homepage": "https://github.com/pure180/jaxa#readme"
 }
