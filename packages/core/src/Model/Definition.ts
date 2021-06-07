@@ -18,6 +18,7 @@ export interface ModelDefinition {
 }
 
 export interface ModelProperty {
+  default?: any;
   isId?: boolean;
   length?: number;
   required?: boolean;

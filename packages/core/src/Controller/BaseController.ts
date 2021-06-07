@@ -61,7 +61,7 @@ export class BaseController {
     }
   };
 
-  public findAll = async (req: Request, res: Response, next: NextFunction) => {
+  public findAll = async (req: Request, res: Response) => {
     if (!this.service) {
       return this.noServiceError();
     }
@@ -71,7 +71,7 @@ export class BaseController {
       const data = await this.service.find(query);
       res.send(data);
     } catch (error) {
-      next(error);
+      res.status(error.status).send({ ...error });
     }
   };
 

@@ -1,5 +1,12 @@
 const { packageDefinition: pkg, App: Server } = require('./src');
-const server = new Server();
+const { createHmac, randomUUID } = require('crypto');
+const secret = createHmac('sha256', randomUUID()).digest('HEX');
+
+const server = new Server({
+  jwt: {
+    secret,
+  }
+});
 
 server
   .start()

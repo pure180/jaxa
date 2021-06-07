@@ -1,4 +1,4 @@
-import { IRoute, Router } from 'express';
+import { IRoute, NextFunction, Request, Response, Router } from 'express';
 import { Model, ModelCtor, SyncOptions } from 'sequelize';
 
 import { ModelSettings } from './Definition';

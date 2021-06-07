@@ -1,3 +1,4 @@
+export * from './Authentication';
 export * from './App';
 export * from './Controller';
 export * from './Model';

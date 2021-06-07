@@ -29,11 +29,11 @@ export class Sequelizer {
 
     if (database === 'sqlite::memory:') {
       this.sequelize = new Sequelize(database, {
-        logging: false,
+        logging: true,
       });
     } else {
       this.sequelize = new Sequelize(database, user, password, {
-        logging: false,
+        logging: true,
         host,
         dialect,
         storage,

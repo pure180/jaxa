@@ -32,14 +32,21 @@ export class BaseSequelize<M extends Model = Model> {
     const attributes: ModelAttributes = {};
 
     Object.keys(this.props.settings.properties).forEach((key) => {
-      const { type, required, isId, length } =
-        this.props.settings.properties[key];
+      const {
+        type,
+        required,
+        isId,
+        length,
+        default: standard,
+      } = this.props.settings.properties[key];
+
       Object.assign(attributes, {
         [key]: {
           type: this.resolveAttributeType(type, length),
           allowNull: !required,
           primaryKey: !!isId,
           autoIncrement: (isId && true) || false,
+          default: standard,
         },
       });
     });

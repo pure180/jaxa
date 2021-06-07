@@ -13,6 +13,14 @@ properties:
   password: 
     type: string
     required: true
+  verified:
+    type: boolean
+    required: true
+    default: false
+  token: 
+    type: string
+    required: false
+    default: null
 relations: 
   restaurants:
     model: permission

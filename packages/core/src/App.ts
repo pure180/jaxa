@@ -12,6 +12,7 @@ import { logger, stream } from './Utils/Logger';
 import { PackageDefinition } from './Utils/PackageDefinition';
 import { Swagger } from './Swagger/Swagger';
 import { env, EnvKeys } from './Utils/env';
+import AuthService from './Authentication/AuthService';
 
 /**
  *
@@ -22,6 +23,9 @@ export interface AppSettings {
   middleWares?: express.RequestHandler[];
   packageJson?: PackageDefinition;
   models?: { pathToConfig?: string };
+  jwt?: {
+    secret: string;
+  };
 }
 
 /**
@@ -158,6 +162,15 @@ export class App {
     for (const model of models) {
       await model.initialize();
       this.router.use(`/${model.path}`, model.router);
+
+      if (model.name === 'user' || model.name === 'User') {
+        const authService = new AuthService({
+          secret: this.settings?.jwt?.secret || '',
+          model,
+        });
+        await authService.initialize();
+        this.router.use('/auth', authService.router);
+      }
     }
 
     const swagger = new Swagger({
