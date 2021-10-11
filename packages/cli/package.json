@@ -22,7 +22,7 @@
     "build": "tsc",
     "jest": "jest --forceExit --detectOpenHandles --passWithNoTests",
     "lint:fix": "npm run lint --fix",
-    "lint": "eslint --ignore-path .gitignore --ext .ts src/ --resolve-plugins-relative-to",
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/ --resolve-plugins-relative-to .",
     "postversion": "git push && git push --tags",
     "prepare": "npm run build",
     "prepublishOnly": "npm run lint",

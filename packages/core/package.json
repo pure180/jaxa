@@ -30,7 +30,7 @@
     "dev": "cross-env NODE_ENV=development nodemon --inspect",
     "jest": "jest --forceExit --detectOpenHandles",
     "lint:fix": "npm run lint --fix",
-    "lint": "eslint --ignore-path .gitignore --ext .ts src/ --resolve-plugins-relative-to",
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/ --resolve-plugins-relative-to .",
     "postversion": "git push && git push --tags",
     "prepare": "npm run build",
     "prepublishOnly": "npm run test && npm run lint",
