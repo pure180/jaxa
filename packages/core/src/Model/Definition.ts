@@ -1,9 +1,11 @@
+import { IRoute } from 'express';
 import {
   BelongsToManyOptions,
   BelongsToOptions,
   HasManyOptions,
   HasOneOptions,
 } from 'sequelize/types';
+import { KeysOfBaseController } from '../Controller/Types';
 
 // eslint-disable-next-line no-shadow
 export enum ModelType {
@@ -18,7 +20,8 @@ export interface ModelDefinition {
 }
 
 export interface ModelProperty {
-  default?: any;
+  default?: unknown;
+  hidden?: true;
   isId?: boolean;
   length?: number;
   required?: boolean;
@@ -44,8 +47,15 @@ export interface ModelRelation {
     | BelongsToManyOptions;
 }
 
+export interface ModelBaseRoute {
+  handler: keyof IRoute;
+  method: KeysOfBaseController;
+  route: string;
+  permission?: string;
+}
 export interface ModelSettings {
   definition: ModelDefinition;
   relations?: { [key: string]: ModelRelation };
   properties: { [key: string]: ModelProperty };
+  routes?: ModelBaseRoute[];
 }

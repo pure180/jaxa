@@ -1,0 +1,51 @@
+{
+  "name": "@jaexa/template",
+  "version": "1.0.0-alpha.12",
+  "description": "> TODO: description",
+  "author": "Daniel Pfisterer <ap8498@lan.huk-coburg.de>",
+  "homepage": "https://github.com/pure180/jaxa/tree/main/packages/template#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pure180/jaxa.git"
+  },
+  "scripts": {
+    "build": "npm run lint && tsc",
+    "dev": "cross-env NODE_ENV=development nodemon --inspect",
+    "jest": "jest --forceExit --detectOpenHandles",
+    "lint:fix": "npm run lint --fix",
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/",
+    "postversion": "git push && git push --tags",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run test && npm run lint",
+    "preversion": "npm run lint",
+    "start": "npm run build && cross-env NODE_ENV=production node dist/server.js",
+    "test:watch": "cross-env ENV_FILE=./.env.test jest --watch",
+    "test": "cross-env ENV_FILE=./.env.test jest",
+    "version": "git add -A src",
+    "watch": "tsc --watch"
+  },
+  "bugs": {
+    "url": "https://github.com/pure180/jaxa/issues"
+  },
+  "dependencies": {
+    "@jaexa/core": "^1.0.0-alpha.10"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^7.32.0",
+    "jest": "^27.0.2",
+    "jshint": "^2.12.0",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.3.0",
+    "ts-jest": "^27.0.1",
+    "typescript": "^4.3.2"
+  }
+}

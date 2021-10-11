@@ -68,9 +68,9 @@ export class App {
    *
    * @returns {express.Application} -
    */
-  public listen() {
+  public async listen() {
     if (!this.listening) {
-      this.app
+      await this.app
         .listen(this.port, () => {
           logger.info(`App listening on the port ${this.port}`);
           this.listening = true;
@@ -93,7 +93,9 @@ export class App {
     this.initializeMiddleware();
     await this.initializeRoutes();
 
-    this.listen();
+    await this.listen();
+
+    return this;
   }
 
   /**
@@ -153,6 +155,7 @@ export class App {
 
     const baseSequelizer = new Sequelizer({
       pathToConfig: this.settings?.models?.pathToConfig,
+      secret: this.settings?.jwt?.secret,
     });
 
     const models = await baseSequelizer.sequelizeModels();
@@ -161,6 +164,8 @@ export class App {
 
     for (const model of models) {
       await model.initialize();
+      // console.log(model);
+
       this.router.use(`/${model.path}`, model.router);
 
       if (model.name === 'user' || model.name === 'User') {

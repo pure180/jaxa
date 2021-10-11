@@ -11,16 +11,20 @@ import { SQLiteSettings } from '../Utils/SQLite';
 import BaseService from './BaseSequelize';
 
 export class Sequelizer {
+  private secret?: string;
+
   public attributes: ModelAttributes;
 
   public sequelize: Sequelize;
 
   public modelConfigurations: ModelConfiguration;
 
-  constructor(props?: { pathToConfig?: string }) {
+  constructor(props?: { pathToConfig?: string; secret?: string }) {
     this.modelConfigurations = new ModelConfiguration({
       pathToConfig: props?.pathToConfig,
     });
+
+    this.secret = props?.secret;
 
     this.attributes = this.modelConfigurations.getAttributes();
 
@@ -73,14 +77,17 @@ export class Sequelizer {
 
     return Object.keys(this.attributes).map((key) => {
       const configuration = this.attributes[key];
-      const model = new BaseModel({
-        name: capitalizeFirstLetter(configuration.definition.name),
-        service:
-          this.sequelize.models[
-            capitalizeFirstLetter(configuration.definition.name)
-          ],
-        settings: this.attributes[key],
-      });
+      const model = new BaseModel(
+        {
+          name: capitalizeFirstLetter(configuration.definition.name),
+          service:
+            this.sequelize.models[
+              capitalizeFirstLetter(configuration.definition.name)
+            ],
+          settings: this.attributes[key],
+        },
+        this.secret,
+      );
 
       return model;
     });

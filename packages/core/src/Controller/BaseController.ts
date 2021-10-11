@@ -1,12 +1,30 @@
 import { NextFunction, Request, Response } from 'express';
+import createHttpError from 'http-errors';
 import { Model, ModelCtor } from 'sequelize';
+import { ModelSettings } from '../Model/Definition';
 import { Service } from '../Service/Service';
 
-export class BaseController {
+const santanizeEntity = <M extends { [key: string]: unknown }>(
+  settings: ModelSettings,
+  entity: M,
+) => {
+  Object.keys(settings.properties).forEach((key) => {
+    const property = settings.properties[key];
+    if (property.hidden && key in entity) {
+      // eslint-disable-next-line no-param-reassign
+      delete entity[key];
+    }
+  });
+  return entity;
+};
+export class BaseController<M extends { [key: string]: unknown }> {
   private service?: Service<any>;
 
-  constructor(model?: ModelCtor<Model<any, any>>) {
-    this.service = model && new Service(model);
+  private settings?: ModelSettings;
+
+  constructor(settings?: ModelSettings, model?: ModelCtor<Model<M, any>>) {
+    this.service = model && new Service<M>(model);
+    this.settings = settings;
   }
 
   private noServiceError = () => {
@@ -24,7 +42,8 @@ export class BaseController {
       const { query } = req;
       const count = await this.service.count(query);
       res.send({ count });
-    } catch (error) {
+    } catch (err) {
+      const error = new createHttpError.HttpError(err as string);
       next(error);
     }
   };
@@ -36,9 +55,14 @@ export class BaseController {
 
     const { body } = req;
     try {
-      const data = await this.service.create(body);
-      res.send(data);
-    } catch (error) {
+      const entity = await this.service.create(body);
+      res.send(
+        (this.settings &&
+          santanizeEntity<M>(this.settings, entity.toJSON() as M)) ||
+          entity,
+      );
+    } catch (err) {
+      const error = new createHttpError.HttpError(err as string);
       res.status(error.status).send({ ...error });
     }
   };
@@ -56,7 +80,8 @@ export class BaseController {
     try {
       const data = await this.service.deleteById(id);
       res.send({ count: data, id });
-    } catch (error) {
+    } catch (err) {
+      const error = new createHttpError.HttpError(err as string);
       next(error);
     }
   };
@@ -68,9 +93,18 @@ export class BaseController {
 
     const { query } = req;
     try {
-      const data = await this.service.find(query);
-      res.send(data);
-    } catch (error) {
+      const entities = await this.service.find(query);
+      res.send(
+        (this.settings &&
+          entities.map(
+            (entity) =>
+              this.settings &&
+              santanizeEntity<M>(this.settings, entity.toJSON() as M),
+          )) ||
+          entities,
+      );
+    } catch (err) {
+      const error = new createHttpError.HttpError(err as string);
       res.status(error.status).send({ ...error });
     }
   };
@@ -82,9 +116,15 @@ export class BaseController {
 
     const { id } = req.params;
     try {
-      const data = await this.service.findById(id);
-      res.send(data);
-    } catch (error) {
+      const entity = await this.service.findById(id);
+      res.send(
+        (this.settings &&
+          entity &&
+          santanizeEntity<M>(this.settings, entity.toJSON() as M)) ||
+          entity,
+      );
+    } catch (err) {
+      const error = new createHttpError.HttpError(err as string);
       next(error);
     }
   };
@@ -103,7 +143,8 @@ export class BaseController {
     try {
       const data = await this.service.updateById(id, body);
       res.send(data);
-    } catch (error) {
+    } catch (err) {
+      const error = new createHttpError.HttpError(err as string);
       next(error);
     }
   };

@@ -55,11 +55,7 @@ export class ModelConfiguration {
     const defaultConfigFiles =
       this.getConfigFiles(this.pathToDefaultConfig) || [];
 
-    const customFiles = this.getConfigFiles();
-
-    if (!customFiles || customFiles.length === 0) {
-      return;
-    }
+    const customFiles = this.getConfigFiles() || [];
 
     const files = customFiles.concat(defaultConfigFiles);
 

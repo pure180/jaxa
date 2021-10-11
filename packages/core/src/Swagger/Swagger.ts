@@ -35,7 +35,6 @@ export class Swagger {
 
   public initialize = () => {
     const setup = this.getSetup();
-    // console.log(setup.components?.schemas);
     this.app.use(this.path, swaggerUi.serve, swaggerUi.setup(setup));
   };
 
@@ -144,7 +143,10 @@ export class Swagger {
     return paths;
   };
 
-  private getParameters = (method: keyof BaseController, modelName: string) => {
+  private getParameters = (
+    method: keyof BaseController<any>,
+    modelName: string,
+  ) => {
     const parameters: { [key: string]: any }[] = [];
     switch (method) {
       case 'findById':
@@ -182,7 +184,10 @@ export class Swagger {
     return parameters;
   };
 
-  private getResponses = (method: keyof BaseController, modelName: string) => {
+  private getResponses = (
+    method: keyof BaseController<any>,
+    modelName: string,
+  ) => {
     const responses: { [key: number]: any } = {};
     switch (method) {
       case 'create':

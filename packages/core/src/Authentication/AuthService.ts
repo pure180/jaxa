@@ -72,7 +72,7 @@ export class AuthService {
         where: { email },
       });
     } catch (err) {
-      error = new createError.Unauthorized(err);
+      error = new createError.Unauthorized(err as string);
       return res.status(error.status).send({ ...error });
     }
 
@@ -178,7 +178,7 @@ export class AuthService {
         verified: false,
       });
     } catch (err) {
-      error = new createError.BadRequest(err);
+      error = new createError.BadRequest(err as string);
       return res.status(error.status).send({ ...error });
     }
 
@@ -202,6 +202,7 @@ export class AuthService {
       verification: {
         success: !!info,
         to: info?.envelope.to,
+        randomVerificationNumber,
       },
     });
   };
@@ -227,7 +228,7 @@ export class AuthService {
         Model<Partial<User>, Partial<User>>
       >(userId);
     } catch (err) {
-      error = new createError.BadRequest(err);
+      error = new createError.BadRequest(err as string);
       return res.status(error.status).send({ ...error });
     }
 
@@ -266,7 +267,7 @@ export class AuthService {
     try {
       await result?.save();
     } catch (err) {
-      error = new createError.BadRequest(err);
+      error = new createError.BadRequest(err as string);
       return res.status(error.status).send({ ...error });
     }
 

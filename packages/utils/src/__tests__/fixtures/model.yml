@@ -1,0 +1,28 @@
+definition:
+  description: Model Table
+  name: model
+  plural: models
+  type: persisted
+properties: 
+  firstName:
+    type: string
+    required: true
+  number: 
+    type: integer
+    required: true
+  boolean: 
+    type: boolean
+    required: true
+  bigInt:
+    type: bigint
+    required: true
+    length: 10
+  optional:
+    type: string
+    required: false
+relations: 
+  relation:
+    model: relation
+    type: hasMany
+    options: 
+      as: users
