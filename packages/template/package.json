@@ -1,6 +1,6 @@
 {
   "name": "@jaexa/template",
-  "version": "1.0.0-alpha.12",
+  "version": "1.0.0-alpha.13",
   "description": "> TODO: description",
   "author": "Daniel Pfisterer <ap8498@lan.huk-coburg.de>",
   "homepage": "https://github.com/pure180/jaxa/tree/main/packages/template#readme",
@@ -36,7 +36,7 @@
     "url": "https://github.com/pure180/jaxa/issues"
   },
   "dependencies": {
-    "@jaexa/core": "^1.0.0-alpha.10"
+    "@jaexa/core": "^1.0.0-alpha.13"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

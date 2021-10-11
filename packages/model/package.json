@@ -1,6 +1,6 @@
 {
   "name": "@jaexa/model",
-  "version": "1.0.0-alpha.12",
+  "version": "1.0.0-alpha.13",
   "private": false,
   "description": "> TODO: description",
   "author": "Daniel Pfisterer <info@daniel-pfisterer.de>",
@@ -63,7 +63,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "@jaexa/core": "^1.0.0-alpha.11",
+    "@jaexa/core": "^1.0.0-alpha.13",
     "bcrypt": "^5.0.1",
     "express": "^4.17.1",
     "http-errors": "^1.8.0",
