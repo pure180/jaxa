@@ -1,6 +1,6 @@
 {
   "name": "@jaexa/core",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-beta.1",
   "private": false,
   "description": "The base core of just another express application framework",
   "keywords": [
@@ -45,11 +45,11 @@
     "url": "https://github.com/pure180/jaxa/issues"
   },
   "dependencies": {
-    "@jaexa/authentication": "^1.0.0-alpha.15",
-    "@jaexa/controller": "^1.0.0-alpha.14",
-    "@jaexa/model": "^1.0.0-alpha.13",
-    "@jaexa/sequelizer": "^1.0.0-alpha.13",
-    "@jaexa/utils": "^1.0.0-alpha.16",
+    "@jaexa/authentication": "^1.0.0-beta.1",
+    "@jaexa/controller": "^1.0.0-beta.1",
+    "@jaexa/model": "^1.0.0-beta.1",
+    "@jaexa/sequelizer": "^1.0.0-beta.1",
+    "@jaexa/utils": "^1.0.0-beta.1",
     "@types/bcrypt": "^5.0.0",
     "@types/lodash": "^4.14.175",
     "@types/nodemailer": "^6.4.4",
