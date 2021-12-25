@@ -1,11 +1,12 @@
-import { Request, Response, Router } from 'express';
-import validator from 'validator';
-import { BaseModel, MailService } from '@jaexa/core';
-import createError, { HttpError } from 'http-errors';
-
 import { compare, hash } from 'bcrypt';
-
+import { Request, Response, Router } from 'express';
+import createError, { HttpError } from 'http-errors';
 import { Model } from 'sequelize/types';
+import validator from 'validator';
+
+import { BaseModel } from '@jaexa/model';
+import { MailService } from '@jaexa/service';
+
 import AccessToken, { User } from './AccessToken';
 
 export interface AuthServiceProps {

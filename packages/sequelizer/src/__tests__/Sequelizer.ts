@@ -1,8 +1,11 @@
-import { BaseModel } from '../../Model/BaseModel';
+import { BaseModel } from '@jaexa/model';
+import { join } from 'path';
 import Sequelizer from '../Sequelizer';
 
 describe('Sequelizer should initialize without errors and create the models and it', () => {
-  const sequelizer = new Sequelizer();
+  const sequelizer = new Sequelizer({
+    pathToConfig: join(__dirname, 'fixtures'),
+  });
 
   it('should have the model attributes', () => {
     const { attributes } = sequelizer;

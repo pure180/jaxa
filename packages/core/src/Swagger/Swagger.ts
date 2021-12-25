@@ -1,12 +1,15 @@
-import swaggerUi from 'swagger-ui-express';
 import express from 'express';
 import { OpenAPIV3 } from 'openapi-types';
-import pkg, { PackageDefinition } from '../Utils/PackageDefinition';
+import swaggerUi from 'swagger-ui-express';
 
-import Sequelizer from '../Sequelizer/Sequelizer';
-import { capitalizeFirstLetter } from '../Utils/ModelConfiguration';
-import { BaseModel } from '../Model/BaseModel';
-import { BaseController } from '../Controller';
+import { BaseController } from '@jaexa/controller';
+import { BaseModel } from '@jaexa/model';
+import { Sequelizer } from '@jaexa/sequelizer';
+import {
+  capitalizeFirstLetter,
+  PackageDefinition,
+  getPackageDefinition,
+} from '@jaexa/utils';
 
 export interface SwaggerProps {
   app: express.Application;
@@ -20,7 +23,7 @@ export class Swagger {
 
   private models: BaseModel[];
 
-  private packageInfo: PackageDefinition = pkg;
+  private packageInfo: PackageDefinition = getPackageDefinition();
 
   private path: string;
 

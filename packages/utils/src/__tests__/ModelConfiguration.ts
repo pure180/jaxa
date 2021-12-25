@@ -1,10 +1,12 @@
+import { join } from 'path';
+
 import { env } from '../env';
 
 import { ModelConfiguration } from '../ModelConfiguration';
 
 describe('Model configuration should be found and rendered correctly and it', () => {
   const modelConfigurations = new ModelConfiguration({
-    pathToConfig: env.JAXA_CONFIGURATION_PATH,
+    pathToConfig: env.JAXA_CONFIGURATION_PATH || join(__dirname, 'fixtures'),
   });
 
   const attributes = modelConfigurations.getAttributes();

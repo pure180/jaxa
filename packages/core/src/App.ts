@@ -1,18 +1,17 @@
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import helmet from 'helmet';
-import hpp from 'hpp';
-import morgan from 'morgan';
 import cors, { CorsOptions } from 'cors';
 import express, { NextFunction, Request, Response, Router } from 'express';
+import helmet from 'helmet';
+import hpp from 'hpp';
 import { HttpError } from 'http-errors';
+import morgan from 'morgan';
 
-import Sequelizer from './Sequelizer/Sequelizer';
-import { logger, stream } from './Utils/Logger';
-import { PackageDefinition } from './Utils/PackageDefinition';
+import { AuthService } from '@jaexa/authentication';
+import { Sequelizer } from '@jaexa/sequelizer';
+import { env, EnvKeys, logger, PackageDefinition, stream } from '@jaexa/utils';
+
 import { Swagger } from './Swagger/Swagger';
-import { env, EnvKeys } from './Utils/env';
-import AuthService from './Authentication/AuthService';
 
 /**
  *

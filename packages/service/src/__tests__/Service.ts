@@ -1,5 +1,8 @@
-import { BaseModel } from '../../Model/BaseModel';
-import { Sequelizer } from '../../Sequelizer/Sequelizer';
+import { join } from 'path';
+
+import { BaseModel } from '@jaexa/model';
+import { Sequelizer } from '@jaexa/Sequelizer';
+
 import { Service } from '../Service';
 
 interface TestData {
@@ -11,7 +14,9 @@ interface TestData {
 }
 
 describe('Service should be initialized and a connection a database established and it', () => {
-  const sequelizer = new Sequelizer();
+  const sequelizer = new Sequelizer({
+    pathToConfig: join(__dirname, 'fixtures'),
+  });
   let models: BaseModel[] = [];
 
   beforeAll(async () => {

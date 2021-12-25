@@ -1,14 +1,14 @@
 import { BelongsToManyOptions, Sequelize } from 'sequelize';
+
 import {
-  BaseModel,
-  ModelRelation,
-  ModelRelationType,
-  ModelConfiguration,
-  ModelAttributes,
   capitalizeFirstLetter,
   lowerCaseFirstLetter,
+  ModelAttributes,
+  ModelConfiguration,
   SQLiteSettings,
-} from '@jaexa/core';
+} from '@jaexa/utils';
+import { BaseModel, ModelRelation, ModelRelationType } from '@jaexa/model';
+
 import BaseService from './BaseSequelize';
 
 export class Sequelizer {

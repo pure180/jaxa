@@ -18,7 +18,7 @@
     "url": "git+https://github.com/pure180/jaxa.git"
   },
   "scripts": {
-    "build": "npm run lint && tsc",
+    "build": "npm run lint && tsc --build --clean && tsc",
     "dev": "cross-env NODE_ENV=development nodemon --inspect",
     "jest": "jest --forceExit --detectOpenHandles",
     "lint:fix": "npm run lint --fix",
@@ -64,7 +64,8 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "@jaexa/core": "^1.0.0-alpha.13",
+    "@jaexa/model": "^1.0.0-alpha.13",
+    "@jaexa/sequelizer": "^1.0.0-alpha.13",
     "http-errors": "^1.8.0",
     "nodemailer": "^6.6.5",
     "sequelize": "^6.6.5"
@@ -77,5 +78,6 @@
     "semi": true,
     "arrowParents": "avoid",
     "endOfLine": "auto"
-  }
+  },
+  "gitHead": "a0ee8607269ca80827daf915bc75d4e54314dd15"
 }

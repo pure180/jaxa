@@ -1,6 +1,6 @@
 {
   "name": "@jaexa/core",
-  "version": "1.0.0-alpha.13",
+  "version": "1.0.0-alpha.14",
   "private": false,
   "description": "The base core of just another express application framework",
   "keywords": [
@@ -26,9 +26,9 @@
     "url": "git+https://github.com/pure180/jaxa.git"
   },
   "scripts": {
-    "build": "npm run lint && tsc",
+    "build": "npm run lint && tsc --build --clean && tsc",
     "dev": "cross-env NODE_ENV=development nodemon --inspect",
-    "jest": "jest --forceExit --detectOpenHandles",
+    "jest": "jest --forceExit --detectOpenHandles --passWithNoTests",
     "lint:fix": "npm run lint --fix",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/ --resolve-plugins-relative-to .",
     "postversion": "git push && git push --tags",
@@ -37,7 +37,7 @@
     "preversion": "npm run lint",
     "start": "npm run build && cross-env NODE_ENV=production node dist/server.js",
     "test:watch": "cross-env ENV_FILE=./.env.test jest --watch",
-    "test": "cross-env ENV_FILE=./.env.test jest",
+    "test": "cross-env ENV_FILE=./.env.test jest --passWithNoTests",
     "version": "git add -A src",
     "watch": "tsc --watch"
   },
@@ -45,6 +45,11 @@
     "url": "https://github.com/pure180/jaxa/issues"
   },
   "dependencies": {
+    "@jaexa/authentication": "^1.0.0-alpha.15",
+    "@jaexa/controller": "^1.0.0-alpha.14",
+    "@jaexa/model": "^1.0.0-alpha.13",
+    "@jaexa/sequelizer": "^1.0.0-alpha.13",
+    "@jaexa/utils": "^1.0.0-alpha.16",
     "@types/bcrypt": "^5.0.0",
     "@types/lodash": "^4.14.175",
     "@types/nodemailer": "^6.4.4",
@@ -95,5 +100,5 @@
     "ts-jest": "^27.0.5",
     "typescript": "^4.4.3"
   },
-  "gitHead": "011a9a8c77a2c5f3ffde853c054bd1a1f77bc48b"
+  "gitHead": "a0ee8607269ca80827daf915bc75d4e54314dd15"
 }

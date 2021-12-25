@@ -5,6 +5,7 @@ import {
   HasManyOptions,
   HasOneOptions,
 } from 'sequelize/types';
+
 import { KeysOfBaseController } from '@jaexa/controller';
 
 // eslint-disable-next-line no-shadow

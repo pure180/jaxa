@@ -1,9 +1,11 @@
-import { Authenticator, BaseController } from '@jaexa/core';
 import { Router } from 'express';
-import { Model, ModelCtor, SyncOptions } from 'sequelize';
 import { unionBy } from 'lodash';
+import { Model, ModelCtor, SyncOptions } from 'sequelize';
 
-import { ModelSettings, ModelBaseRoute } from './Definition';
+import { Authenticator } from '@jaexa/authentication';
+import { BaseController } from '@jaexa/controller';
+
+import { ModelBaseRoute, ModelSettings } from './Definition';
 
 export interface BaseModelProps {
   name: string;

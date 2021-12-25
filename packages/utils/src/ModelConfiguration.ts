@@ -2,7 +2,7 @@ import YAML from 'yaml';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { basename, extname, join } from 'path';
 
-import { ModelSettings } from '@jaexa/core';
+import { ModelSettings } from '@jaexa/model';
 import { env } from './env';
 
 export interface ModelConfigurationProps {

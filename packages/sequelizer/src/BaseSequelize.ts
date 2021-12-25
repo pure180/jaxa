@@ -6,11 +6,8 @@ import {
   Sequelize,
 } from 'sequelize';
 
-import {
-  ModelProperty,
-  ModelSettings,
-  capitalizeFirstLetter,
-} from '@jaexa/core';
+import { capitalizeFirstLetter } from '@jaexa/utils';
+import { ModelProperty, ModelSettings } from '@jaexa/model';
 
 export interface BaseSequelizeProps {
   sequelize: Sequelize;

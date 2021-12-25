@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import { Model, ModelCtor } from 'sequelize';
-import { ModelSettings, Service } from '@jaexa/core';
-// import { ModelSettings } from '@jaexa/model';
-// import { Service } from '@jaexa/service';
+import { ModelSettings } from '@jaexa/model';
+import { Service } from '@jaexa/service';
 
 const santanizeEntity = <M extends { [key: string]: unknown }>(
   settings: ModelSettings,

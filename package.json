@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/pure180/jaxa#readme",
   "devDependencies": {
+    "@types/jest": "^27.0.3",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "cross-env": "^7.0.3",
     "eslint": "^7.27.0",
