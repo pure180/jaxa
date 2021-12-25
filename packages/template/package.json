@@ -28,7 +28,7 @@
     "preversion": "npm run lint",
     "start": "npm run build && cross-env NODE_ENV=production node dist/server.js",
     "test:watch": "cross-env ENV_FILE=./.env.test jest --watch",
-    "test": "cross-env ENV_FILE=./.env.test jest",
+    "test": "cross-env ENV_FILE=./.env.test jest --passWithNoTests",
     "version": "git add -A src",
     "watch": "tsc --watch"
   },
