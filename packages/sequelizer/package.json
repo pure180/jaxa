@@ -65,7 +65,8 @@
   "dependencies": {
     "@jaexa/model": "^1.0.0-beta.1",
     "@jaexa/utils": "^1.0.0-beta.1",
-    "sequelize": "^6.6.5"
+    "sequelize": "^6.6.5",
+    "sqlite3": "^5.0.2"
   },
   "prettier": {
     "printWidth": 80,
@@ -76,5 +77,5 @@
     "arrowParents": "avoid",
     "endOfLine": "auto"
   },
-  "gitHead": "a0ee8607269ca80827daf915bc75d4e54314dd15"
+  "gitHead": "1de0046c6754772e5612e22edb9ca1065a578092"
 }
