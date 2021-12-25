@@ -1,11 +1,14 @@
-# `authentication`
+# `controller`
 
 > TODO: description
 
 ## Usage
 
+Installation:
+`npm i @jaexa/controller` or `yarn add @jaexa/controller`
+
 ```
-const authentication = require('authentication');
+const controller = require('@jaexa/controller');
 
 // TODO: DEMONSTRATE API
 ```

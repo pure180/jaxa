@@ -1,11 +1,14 @@
-# `authentication`
+# `utils`
 
 > TODO: description
 
 ## Usage
 
+Installation:
+`npm i @jaexa/utils` or `yarn add @jaexa/utils`
+
 ```
-const authentication = require('authentication');
+const utils = require('@jaexa/utils');
 
 // TODO: DEMONSTRATE API
 ```
