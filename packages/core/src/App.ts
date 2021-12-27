@@ -10,16 +10,15 @@ import { join } from 'path';
 
 import { AuthService } from '@jaexa/authentication';
 import { Sequelizer } from '@jaexa/sequelizer';
+import { Swagger } from '@jaexa/swagger';
 import {
   env,
   EnvKeys,
+  getPackageDefinition,
   logger,
   PackageDefinition,
   stream,
-  getPackageDefinition,
 } from '@jaexa/utils';
-
-import { Swagger } from './Swagger/Swagger';
 
 /**
  *
