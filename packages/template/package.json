@@ -26,11 +26,22 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm run test && npm run lint",
     "preversion": "npm run lint",
-    "start": "npm run build && cross-env NODE_ENV=production node dist/server.js",
+    "start": "npm run build && cross-env NODE_ENV=production node dist/index.js",
+    "start:watch": "nodemon --exec \"tsc && node dist/index.js\"",
     "test:watch": "cross-env ENV_FILE=./.env.test jest --watch",
     "test": "cross-env ENV_FILE=./.env.test jest --passWithNoTests",
     "version": "git add -A src",
     "watch": "tsc --watch"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "./dist",
+      "./config",
+      "./node_modules"
+    ],
+    "ignore": [
+      "./src"
+    ]
   },
   "bugs": {
     "url": "https://github.com/pure180/jaxa/issues"
