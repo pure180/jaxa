@@ -6,10 +6,18 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import { HttpError } from 'http-errors';
 import morgan from 'morgan';
+import { join } from 'path';
 
 import { AuthService } from '@jaexa/authentication';
 import { Sequelizer } from '@jaexa/sequelizer';
-import { env, EnvKeys, logger, PackageDefinition, stream } from '@jaexa/utils';
+import {
+  env,
+  EnvKeys,
+  logger,
+  PackageDefinition,
+  stream,
+  getPackageDefinition,
+} from '@jaexa/utils';
 
 import { Swagger } from './Swagger/Swagger';
 
@@ -20,8 +28,9 @@ export interface AppSettings {
   cors?: CorsOptions;
   domain?: string;
   middleWares?: express.RequestHandler[];
-  packageJson?: PackageDefinition;
   models?: { pathToConfig?: string };
+  publicPath?: string;
+  packageJson?: PackageDefinition;
   jwt?: {
     secret: string;
   };
@@ -39,12 +48,16 @@ export class App {
 
   private port: number;
 
+  private publicPath: string;
+
   private router: Router;
 
   /**
    * @var settings {AppSettings | undefined} -
    */
   private settings?: AppSettings;
+
+  private runningSince?: string | Date;
 
   /**
    *
@@ -59,8 +72,15 @@ export class App {
     this.app.mountpath = '/api/v1';
     this.env = (env.NODE_ENV as EnvKeys | undefined) || EnvKeys.development;
     this.port = Number(env.PORT) || 1337;
+    this.publicPath = settings?.publicPath || join(__dirname, '..', 'public');
     this.settings = settings;
+    if (this.settings) {
+      this.settings.packageJson =
+        settings?.packageJson || getPackageDefinition();
+    }
     this.router = Router({ mergeParams: true });
+    this.app.set('views', this.publicPath);
+    this.app.set('view engine', 'jade');
   }
 
   /**
@@ -73,6 +93,7 @@ export class App {
         .listen(this.port, () => {
           logger.info(`App listening on the port ${this.port}`);
           this.listening = true;
+          this.runningSince = new Date();
         })
         .once('error', (error: HttpError) => {
           if (error.code === 'EADDRINUSE') {
@@ -90,6 +111,18 @@ export class App {
    */
   public async start() {
     this.initializeMiddleware();
+
+    this.app.use('/', express.static(this.publicPath));
+    this.app.get('/', (req, res) => {
+      res.render('index', {
+        application: this,
+        env: this.env,
+        express: this.app,
+        pkg: this.settings?.packageJson,
+        runningSince: this.runningSince,
+      });
+    });
+
     await this.initializeRoutes();
 
     await this.listen();
@@ -139,6 +172,13 @@ export class App {
    * @returns void -
    */
   private async initializeRoutes() {
+    this.app.get(this.app.mountpath, (req, res) => {
+      res.json({
+        name: this.settings?.packageJson?.name,
+        started: this.runningSince,
+      });
+    });
+
     this.router.get(
       this.app.mountpath,
       (req: Request, res: Response, next: NextFunction) => {
@@ -163,7 +203,6 @@ export class App {
 
     for (const model of models) {
       await model.initialize();
-      // console.log(model);
 
       this.router.use(`/${model.path}`, model.router);
 
