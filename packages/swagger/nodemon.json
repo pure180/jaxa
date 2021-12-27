@@ -1,0 +1,14 @@
+{
+  "watch": [
+      "src",
+      ".env",
+      "./index.ts"
+  ],
+  "ext": "js,ts,json",
+  "ignore": [
+      "src/**/*.spec.ts",
+      "src/**/*.test.ts",
+      "src/**/*__tests__"
+  ],
+  "exec": "node --inspect --require ts-node/register index.ts"
+}
