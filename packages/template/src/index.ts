@@ -1,14 +1,11 @@
 import { App as Application } from '@jaexa/core';
 
-const apiDemo = async () => {
-  const server = new Application({
+const apiDemo = async () =>
+  new Application({
     jwt: {
       secret: 'HardcoreSecret',
     },
-  });
-  // console.log(server);
-  return server.start();
-};
+  }).start();
 
 apiDemo()
   .then(() => {
