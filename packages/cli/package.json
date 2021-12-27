@@ -1,6 +1,6 @@
 {
   "name": "@jaexa/cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The basic jaexa cli",
   "author": "Daniel Pfisterer <daniel.pfisterer@power.cloud>",
   "keywords": [],

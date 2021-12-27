@@ -1,6 +1,6 @@
 {
   "name": "@jaexa/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "description": "The base core of just another express application framework",
   "keywords": [
@@ -49,7 +49,7 @@
     "@jaexa/controller": "^1.0.0",
     "@jaexa/model": "^1.0.0",
     "@jaexa/sequelizer": "^1.0.0",
-    "@jaexa/swagger": "^1.0.0",
+    "@jaexa/swagger": "^1.0.1",
     "@jaexa/utils": "^1.0.0",
     "@types/bcrypt": "^5.0.0",
     "@types/lodash": "^4.14.175",
