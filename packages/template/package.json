@@ -10,9 +10,17 @@
     "lib": "dist"
   },
   "files": [
+    ".eslintignore",
+    ".eslintrc.js",
+    ".gitignore",
+    ".npmignore",
+    ".prettierrc",
     "config",
     "dist",
-    "src"
+    "jest.config.js",
+    "nodemon.json",
+    "src",
+    "tsconfig.json"
   ],
   "repository": {
     "type": "git",
