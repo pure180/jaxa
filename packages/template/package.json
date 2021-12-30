@@ -10,7 +10,9 @@
     "lib": "dist"
   },
   "files": [
-    "dist"
+    "config",
+    "dist",
+    "src"
   ],
   "repository": {
     "type": "git",
